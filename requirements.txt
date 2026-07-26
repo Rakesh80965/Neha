@@ -1,0 +1,7 @@
+flask
+httpx
+gunicorn
+openpyxl
+Pillow
+pillow-heif
+flask-cors
