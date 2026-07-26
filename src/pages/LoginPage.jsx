@@ -41,7 +41,7 @@ export const LoginPage = ({ onSwitchToRegister }) => {
           width: '100%',
           borderRadius: 'var(--radius-xl)',
           padding: '2.8rem 2.4rem',
-          borderTop: '4px solid var(--gold-500)',
+          borderTop: '4px solid var(--sand-500)',
           position: 'relative',
         }}
       >
@@ -52,19 +52,19 @@ export const LoginPage = ({ onSwitchToRegister }) => {
               width: '64px',
               height: '64px',
               borderRadius: '20px',
-              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+              background: 'linear-gradient(135deg, #F4A261 0%, #E07A5F 100%)',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#FFFFFF',
-              boxShadow: '0 8px 30px rgba(245, 158, 11, 0.4)',
+              boxShadow: '0 10px 32px rgba(244, 162, 97, 0.45)',
               marginBottom: '1rem',
             }}
           >
             <Layers size={32} />
           </div>
-          <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#FFFFFF' }}>Welcome Back</h2>
-          <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginTop: '0.3rem' }}>
+          <h2 style={{ fontSize: '1.85rem', fontWeight: 800, color: '#FFFFFF', fontFamily: 'var(--font-heading)' }}>Welcome Back</h2>
+          <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginTop: '0.3rem', fontFamily: 'var(--font-sans)' }}>
             Sign in to access your smart fabric search workspace
           </p>
         </div>
@@ -140,33 +140,35 @@ export const LoginPage = ({ onSwitchToRegister }) => {
             type="button"
             onClick={loginAsGuest}
             style={{
-              padding: '0.75rem',
+              padding: '0.8rem',
               width: '100%',
               borderRadius: 'var(--radius-md)',
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(245, 158, 11, 0.3)',
-              color: 'var(--gold-400)',
-              fontWeight: 600,
-              fontSize: '0.9rem',
+              background: 'rgba(244, 162, 97, 0.08)',
+              border: '1px solid rgba(244, 162, 97, 0.35)',
+              color: 'var(--sand-500)',
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 700,
+              fontSize: '0.92rem',
               cursor: 'pointer',
-              transition: 'all 0.2s ease',
+              transition: 'all 0.25s ease',
             }}
           >
             ⚡ Explore Demo Workspace (Skip Login)
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '1.8rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+        <div style={{ textAlign: 'center', marginTop: '1.8rem', fontSize: '0.9rem', color: 'var(--text-muted)', fontFamily: 'var(--font-sans)' }}>
           Don't have an account?{' '}
           <button
             onClick={onSwitchToRegister}
             style={{
               background: 'none',
               border: 'none',
-              color: 'var(--gold-400)',
-              fontWeight: 600,
+              color: 'var(--sand-500)',
+              fontWeight: 700,
               cursor: 'pointer',
               textDecoration: 'underline',
+              fontFamily: 'var(--font-sans)',
             }}
           >
             Create one now &rarr;

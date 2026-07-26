@@ -1,50 +1,62 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&family=Syne:wght@600;700;800&display=swap');
 
 :root {
-  --font-sans: 'Plus Jakarta Sans', 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-heading: 'Outfit', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Syne', 'Sora', sans-serif;
+  --font-display: 'Sora', sans-serif;
   --font-serif: 'Playfair Display', serif;
 
-  --navy-900: #0B1329;
-  --navy-800: #0F172A;
-  --navy-700: #1E293B;
-  --navy-600: #334155;
-  --navy-500: #475569;
-  
-  --gold-600: #B45309;
-  --gold-500: #D97706;
-  --gold-400: #F59E0B;
-  --gold-300: #FBBF24;
-  --gold-100: #FEF3C7;
-  --gold-glow: rgba(245, 158, 11, 0.25);
+  /* Behance Minimalist Palette - Obsidian, Sand Ochre, Terracotta & Earthen Sage */
+  --obsidian-950: #070A0F;
+  --obsidian-900: #0D121D;
+  --obsidian-800: #151C2A;
+  --obsidian-700: #1F283B;
+  --obsidian-600: #2D3A54;
 
-  --burgundy-700: #7F1D1D;
-  --burgundy-600: #991B1B;
-  --burgundy-500: #BE123C;
+  --sand-500: #F4A261;
+  --sand-400: #E07A5F;
+  --sand-300: #F4F1DE;
+  --terracotta-600: #D97706;
+  --terracotta-500: #E07A5F;
 
-  --emerald-600: #059669;
-  --emerald-500: #10B981;
-  --emerald-100: #D1FAE5;
+  --sage-500: #2A9D8F;
+  --sage-400: #3DCCC7;
+  --sage-100: #E6F8F6;
 
-  --bg-main: #0B1329;
-  --bg-surface: #0F172A;
-  --bg-card: rgba(30, 41, 59, 0.7);
-  --bg-card-hover: rgba(30, 41, 59, 0.9);
+  --gold-600: #C97A1E;
+  --gold-500: #F4A261;
+  --gold-400: #F6AD55;
+  --gold-300: #FBD38D;
+  --gold-100: #FEFCBF;
+  --gold-glow: rgba(244, 162, 97, 0.22);
+
+  --burgundy-700: #80232B;
+  --burgundy-600: #A82D38;
+  --burgundy-500: #D93848;
+
+  --emerald-600: #1D8A7D;
+  --emerald-500: #2A9D8F;
+  --emerald-100: #E6F8F6;
+
+  --bg-main: #070A0F;
+  --bg-surface: #0D121D;
+  --bg-card: rgba(21, 28, 42, 0.72);
+  --bg-card-hover: rgba(27, 36, 54, 0.92);
   
   --text-main: #F8FAFC;
   --text-muted: #94A3B8;
   --text-dim: #64748B;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-active: rgba(245, 158, 11, 0.35);
+  --border-subtle: rgba(255, 255, 255, 0.09);
+  --border-active: rgba(244, 162, 97, 0.4);
 
-  --glass-bg: rgba(15, 23, 42, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  --glass-bg: rgba(13, 18, 29, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
 
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 30px;
 }
 
 * {
@@ -80,11 +92,11 @@ html, body, #root {
   position: absolute;
   top: -15%;
   right: -10%;
-  width: 650px;
-  height: 650px;
-  background: radial-gradient(circle, rgba(217, 119, 6, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(244, 162, 97, 0.16) 0%, rgba(7, 10, 15, 0) 70%);
   border-radius: 50%;
-  filter: blur(80px);
+  filter: blur(90px);
 }
 
 .bg-ambient::after {
@@ -92,37 +104,37 @@ html, body, #root {
   position: absolute;
   bottom: -15%;
   left: -10%;
-  width: 750px;
-  height: 750px;
-  background: radial-gradient(circle, rgba(153, 27, 27, 0.12) 0%, rgba(15, 23, 42, 0) 70%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(42, 157, 143, 0.12) 0%, rgba(7, 10, 15, 0) 70%);
   border-radius: 50%;
-  filter: blur(100px);
+  filter: blur(110px);
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(7, 10, 15, 0.9);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(245, 158, 11, 0.25);
+  background: rgba(244, 162, 97, 0.28);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(245, 158, 11, 0.5);
+  background: rgba(244, 162, 97, 0.55);
 }
 
 /* Glassmorphic Container Utility */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
 }
@@ -130,22 +142,26 @@ html, body, #root {
 /* Typography Helpers */
 h1, h2, h3, h4 {
   font-family: var(--font-heading);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
 }
 
 .font-serif {
   font-family: var(--font-serif);
 }
 
+.font-display {
+  font-family: var(--font-display);
+}
+
 .gradient-text-gold {
-  background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #D97706 100%);
+  background: linear-gradient(135deg, #F4F1DE 0%, #F4A261 50%, #E07A5F 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .gradient-text-white {
-  background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -156,25 +172,26 @@ h1, h2, h3, h4 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.6rem;
-  background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
+  gap: 0.55rem;
+  padding: 0.8rem 1.7rem;
+  background: linear-gradient(135deg, #F4A261 0%, #E07A5F 50%, #D97706 100%);
   color: #FFFFFF;
+  font-family: var(--font-sans);
   font-weight: 600;
   font-size: 0.92rem;
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 18px rgba(217, 119, 6, 0.3);
+  box-shadow: 0 6px 20px rgba(244, 162, 97, 0.32);
   position: relative;
   overflow: hidden;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(217, 119, 6, 0.45);
-  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  box-shadow: 0 10px 28px rgba(244, 162, 97, 0.5);
+  background: linear-gradient(135deg, #F6AD55 0%, #F4A261 50%, #E07A5F 100%);
 }
 
 .btn-primary:active {
@@ -185,10 +202,11 @@ h1, h2, h3, h4 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.4rem;
+  gap: 0.55rem;
+  padding: 0.78rem 1.5rem;
   background: rgba(255, 255, 255, 0.05);
   color: var(--text-main);
+  font-family: var(--font-sans);
   font-weight: 600;
   font-size: 0.9rem;
   border: 1px solid var(--border-subtle);
@@ -199,7 +217,7 @@ h1, h2, h3, h4 {
 
 .btn-secondary:hover {
   background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(244, 162, 97, 0.35);
   color: #FFFFFF;
 }
 
@@ -208,27 +226,27 @@ h1, h2, h3, h4 {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.6rem 1.2rem;
-  background: rgba(153, 27, 27, 0.2);
+  padding: 0.65rem 1.25rem;
+  background: rgba(168, 45, 56, 0.2);
   color: #F87171;
   font-weight: 600;
   font-size: 0.85rem;
-  border: 1px solid rgba(153, 27, 27, 0.4);
+  border: 1px solid rgba(217, 56, 72, 0.4);
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .btn-danger:hover {
-  background: rgba(153, 27, 27, 0.4);
+  background: rgba(217, 56, 72, 0.4);
   color: #FFFFFF;
 }
 
 /* Input Styles */
 .input-field {
   width: 100%;
-  padding: 0.8rem 1.1rem;
-  background: rgba(15, 23, 42, 0.6);
+  padding: 0.85rem 1.15rem;
+  background: rgba(13, 18, 29, 0.65);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   color: #F8FAFC;
@@ -243,9 +261,9 @@ h1, h2, h3, h4 {
 
 .input-field:focus {
   outline: none;
-  border-color: var(--gold-500);
+  border-color: var(--sand-500);
   box-shadow: 0 0 0 4px var(--gold-glow);
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(13, 18, 29, 0.9);
 }
 
 select.input-field {

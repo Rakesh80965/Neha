@@ -7,9 +7,9 @@ export const SampleCard = ({ sample, onOpenModal, onRemoveFromGroup, rankInfo })
 
   const getRankBadgeClass = () => {
     if (!rankInfo) return null;
-    if (rankInfo.rank === 1) return { bg: 'linear-gradient(135deg, #059669 0%, #047857 100%)', label: '#1 BEST MATCH' };
-    if (rankInfo.rank <= 3) return { bg: 'linear-gradient(135deg, #D97706 0%, #B45309 100%)', label: `TOP PICK #${rankInfo.rank}` };
-    return { bg: 'rgba(51, 65, 85, 0.85)', label: `MATCH #${rankInfo.rank}` };
+    if (rankInfo.rank === 1) return { bg: 'linear-gradient(135deg, #2A9D8F 0%, #1D8A7D 100%)', label: '#1 BEST MATCH' };
+    if (rankInfo.rank <= 3) return { bg: 'linear-gradient(135deg, #F4A261 0%, #E07A5F 100%)', label: `TOP PICK #${rankInfo.rank}` };
+    return { bg: 'rgba(45, 58, 84, 0.88)', label: `MATCH #${rankInfo.rank}` };
   };
 
   const badge = getRankBadgeClass();
@@ -18,8 +18,8 @@ export const SampleCard = ({ sample, onOpenModal, onRemoveFromGroup, rankInfo })
     <div
       onClick={() => onOpenModal && onOpenModal(sample)}
       style={{
-        background: 'rgba(30, 41, 59, 0.55)',
-        backdropFilter: 'blur(12px)',
+        background: 'var(--bg-card)',
+        backdropFilter: 'blur(16px)',
         border: '1px solid var(--border-subtle)',
         borderRadius: 'var(--radius-lg)',
         overflow: 'hidden',
@@ -31,8 +31,8 @@ export const SampleCard = ({ sample, onOpenModal, onRemoveFromGroup, rankInfo })
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-6px)';
-        e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.4)';
-        e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(245, 158, 11, 0.15)';
+        e.currentTarget.style.borderColor = 'rgba(244, 162, 97, 0.45)';
+        e.currentTarget.style.boxShadow = '0 24px 48px rgba(0, 0, 0, 0.5), 0 0 24px rgba(244, 162, 97, 0.18)';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = 'translateY(0)';

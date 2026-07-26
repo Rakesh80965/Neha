@@ -82,13 +82,13 @@ export const SearchPage = ({ onOpenModal }) => {
     <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
       {/* Search Header */}
       <div style={{ marginBottom: '2rem' }}>
-        <div style={{ fontSize: '0.8rem', color: 'var(--gold-400)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+        <div style={{ fontSize: '0.8rem', color: 'var(--sand-500)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', fontFamily: 'var(--font-heading)' }}>
           Intelligent Fabric Matcher
         </div>
-        <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#FFFFFF', marginTop: '0.2rem' }}>
+        <h2 style={{ fontSize: '2.1rem', fontWeight: 800, color: '#FFFFFF', marginTop: '0.2rem', fontFamily: 'var(--font-heading)', letterSpacing: '-0.03em' }}>
           Search Samples by Buyer Requirements
         </h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '0.3rem' }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '0.3rem', fontFamily: 'var(--font-sans)' }}>
           Combine construction specs with natural performance & feel terms to get exact priority-ranked recommendations.
         </p>
       </div>
@@ -100,12 +100,12 @@ export const SearchPage = ({ onOpenModal }) => {
           borderRadius: 'var(--radius-xl)',
           padding: '2rem',
           marginBottom: '2rem',
-          borderTop: '3px solid var(--gold-500)',
+          borderTop: '3px solid var(--sand-500)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.5rem' }}>
-          <SlidersHorizontal size={20} color="var(--gold-400)" />
-          <h3 style={{ fontSize: '1.15rem', color: '#FFFFFF', fontWeight: 700 }}>Search Parameters</h3>
+          <SlidersHorizontal size={20} color="var(--sand-500)" />
+          <h3 style={{ fontSize: '1.18rem', color: '#FFFFFF', fontWeight: 700, fontFamily: 'var(--font-heading)' }}>Search Parameters</h3>
         </div>
 
         <form onSubmit={handleSearch}>

@@ -27,13 +27,13 @@ export const Navbar = () => {
           style={{
             width: '42px',
             height: '42px',
-            borderRadius: '12px',
-            background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+            borderRadius: '13px',
+            background: 'linear-gradient(135deg, #F4A261 0%, #E07A5F 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: '#FFFFFF',
-            boxShadow: '0 4px 16px rgba(245, 158, 11, 0.4)',
+            boxShadow: '0 6px 20px rgba(244, 162, 97, 0.4)',
           }}
         >
           <Layers size={22} />
@@ -41,19 +41,19 @@ export const Navbar = () => {
         <div>
           <h1
             style={{
-              fontSize: '1.25rem',
-              fontWeight: 700,
+              fontSize: '1.28rem',
+              fontWeight: 800,
               fontFamily: 'var(--font-heading)',
               lineHeight: 1.1,
-              letterSpacing: '-0.02em',
-              background: 'linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%)',
+              letterSpacing: '-0.03em',
+              background: 'linear-gradient(135deg, #FFFFFF 0%, #F4F1DE 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}
           >
-            FabricSample <span style={{ color: 'var(--gold-400)', WebkitTextFillColor: 'initial', fontSize: '0.75rem', fontWeight: 600, padding: '0.1rem 0.5rem', background: 'rgba(245,158,11,0.15)', borderRadius: '6px', border: '1px solid rgba(245,158,11,0.3)', marginLeft: '0.4rem' }}>PRO</span>
+            FabricSample <span style={{ color: 'var(--sand-500)', WebkitTextFillColor: 'initial', fontSize: '0.72rem', fontWeight: 700, padding: '0.15rem 0.55rem', background: 'rgba(244,162,97,0.15)', borderRadius: '6px', border: '1px solid rgba(244,162,97,0.35)', marginLeft: '0.4rem', letterSpacing: '0.05em' }}>PRO</span>
           </h1>
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', letterSpacing: '0.02em' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', letterSpacing: '0.01em', fontFamily: 'var(--font-sans)' }}>
             Intelligent Buyer Requirement Matcher
           </p>
         </div>

@@ -13,8 +13,8 @@ export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => 
     <aside
       style={{
         width: '240px',
-        background: 'rgba(15, 23, 42, 0.6)',
-        backdropFilter: 'blur(16px)',
+        background: 'rgba(13, 18, 29, 0.7)',
+        backdropFilter: 'blur(20px)',
         borderRight: '1px solid var(--border-subtle)',
         padding: '2rem 1rem',
         display: 'flex',
@@ -27,15 +27,16 @@ export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => 
           fontSize: '0.68rem',
           fontWeight: 700,
           textTransform: 'uppercase',
-          letterSpacing: '0.12em',
+          letterSpacing: '0.14em',
           color: 'var(--text-dim)',
           padding: '0 0.8rem 1rem',
+          fontFamily: 'var(--font-heading)',
         }}
       >
         Navigation
       </div>
 
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+      <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -48,28 +49,29 @@ export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => 
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.85rem',
-                padding: '0.8rem 1rem',
+                padding: '0.85rem 1.05rem',
                 borderRadius: 'var(--radius-md)',
                 background: isActive
-                  ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(217, 119, 6, 0.08) 100%)'
+                  ? 'linear-gradient(135deg, rgba(244, 162, 97, 0.2) 0%, rgba(224, 122, 95, 0.1) 100%)'
                   : 'transparent',
-                color: isActive ? 'var(--gold-400)' : 'var(--text-muted)',
-                border: isActive ? '1px solid rgba(245, 158, 11, 0.3)' : '1px solid transparent',
-                fontWeight: isActive ? 600 : 500,
+                color: isActive ? 'var(--sand-500)' : 'var(--text-muted)',
+                border: isActive ? '1px solid rgba(244, 162, 97, 0.4)' : '1px solid transparent',
+                fontWeight: isActive ? 700 : 500,
                 fontSize: '0.92rem',
+                fontFamily: 'var(--font-sans)',
                 cursor: 'pointer',
                 textAlign: 'left',
-                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
                 position: 'relative',
               }}
             >
-              <Icon size={19} color={isActive ? '#F59E0B' : '#94A3B8'} />
+              <Icon size={19} color={isActive ? '#F4A261' : '#94A3B8'} />
               <span style={{ flex: 1 }}>{item.label}</span>
 
               {item.badge !== undefined && item.badge > 0 && (
                 <span
                   style={{
-                    background: 'var(--burgundy-600)',
+                    background: 'linear-gradient(135deg, #A82D38 0%, #D93848 100%)',
                     color: '#FFFFFF',
                     fontSize: '0.72rem',
                     fontWeight: 700,
@@ -82,7 +84,7 @@ export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => 
               )}
 
               {isActive && (
-                <ChevronRight size={16} color="var(--gold-400)" style={{ opacity: 0.8 }} />
+                <ChevronRight size={16} color="var(--sand-500)" style={{ opacity: 0.9 }} />
               )}
             </button>
           );
@@ -92,16 +94,16 @@ export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => 
       <div
         style={{
           marginTop: 'auto',
-          padding: '1.2rem',
+          padding: '1.25rem',
           borderRadius: 'var(--radius-md)',
-          background: 'rgba(245, 158, 11, 0.05)',
-          border: '1px solid rgba(245, 158, 11, 0.15)',
+          background: 'rgba(244, 162, 97, 0.06)',
+          border: '1px solid rgba(244, 162, 97, 0.2)',
         }}
       >
-        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--gold-400)', marginBottom: '0.3rem' }}>
+        <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--sand-500)', marginBottom: '0.3rem', fontFamily: 'var(--font-heading)' }}>
           Fabric Engine Active
         </div>
-        <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+        <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', lineHeight: '1.45', fontFamily: 'var(--font-sans)' }}>
           Priority-score matching rule set loaded from database.
         </div>
       </div>
