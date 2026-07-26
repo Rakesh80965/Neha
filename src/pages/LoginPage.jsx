@@ -3,7 +3,7 @@ import { Layers, ArrowRight, Lock, Mail, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export const LoginPage = ({ onSwitchToRegister }) => {
-  const { login } = useAuth();
+  const { login, loginAsGuest } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -134,6 +134,25 @@ export const LoginPage = ({ onSwitchToRegister }) => {
           >
             <span>{submitting ? 'Signing In...' : 'Sign In'}</span>
             <ArrowRight size={18} />
+          </button>
+
+          <button
+            type="button"
+            onClick={loginAsGuest}
+            style={{
+              padding: '0.75rem',
+              width: '100%',
+              borderRadius: 'var(--radius-md)',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(245, 158, 11, 0.3)',
+              color: 'var(--gold-400)',
+              fontWeight: 600,
+              fontSize: '0.9rem',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            ⚡ Explore Demo Workspace (Skip Login)
           </button>
         </form>
 
