@@ -538,22 +538,22 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                   onClick={(e) => e.stopPropagation()}
                   style={{
                     background: '#f8fafc',
-                    borderRadius: '12px',
-                    padding: '1rem 1.25rem',
+                    borderRadius: '10px',
+                    padding: '0.65rem 0.85rem',
                     border: '1px solid #f1f5f9',
                   }}
                 >
                   <div
                     style={{
-                      fontSize: '0.75rem',
+                      fontSize: '0.68rem',
                       fontWeight: 700,
                       textTransform: 'uppercase',
-                      letterSpacing: '0.08em',
+                      letterSpacing: '0.06em',
                       color: '#64748b',
-                      marginBottom: '0.85rem',
+                      marginBottom: '0.45rem',
                     }}
                   >
-                    Tracking Workflow Stage (Click Radio Button to Update Status)
+                    Update Stage Status
                   </div>
 
                   <div
@@ -562,7 +562,7 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       flexWrap: 'wrap',
-                      gap: '0.75rem',
+                      gap: '0.35rem',
                     }}
                   >
                     {WORKFLOW_STAGES.map((stg, idx) => {
@@ -576,13 +576,13 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                             style={{
                               display: 'flex',
                               alignItems: 'center',
-                              gap: '0.5rem',
+                              gap: '0.3rem',
                               cursor: 'pointer',
-                              padding: '0.4rem 0.75rem',
-                              borderRadius: '8px',
+                              padding: '0.22rem 0.5rem',
+                              borderRadius: '6px',
                               background: isChecked ? `${stg.color}15` : '#ffffff',
                               border: isChecked ? `1.5px solid ${stg.color}` : '1px solid #cbd5e1',
-                              transition: 'all 0.2s',
+                              transition: 'all 0.15s ease',
                             }}
                           >
                             <input
@@ -590,14 +590,15 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                               name={`stage-${enq.enquiry_id}`}
                               checked={isChecked}
                               onChange={() => {}}
-                              style={{ accentColor: stg.color, cursor: 'pointer' }}
+                              style={{ accentColor: stg.color, cursor: 'pointer', transform: 'scale(0.8)' }}
                             />
-                            <StageIcon size={15} color={isChecked ? stg.color : '#64748b'} />
+                            <StageIcon size={13} color={isChecked ? stg.color : '#64748b'} />
                             <span
                               style={{
-                                fontSize: '0.82rem',
+                                fontSize: '0.73rem',
                                 fontWeight: isChecked ? 700 : 500,
                                 color: isChecked ? stg.color : '#475569',
+                                whitespace: 'nowrap',
                               }}
                             >
                               {stg.label}
@@ -605,7 +606,7 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                           </label>
 
                           {idx < WORKFLOW_STAGES.length - 1 && (
-                            <ChevronRight size={16} color="#cbd5e1" style={{ flexShrink: 0 }} />
+                            <ChevronRight size={12} color="#cbd5e1" style={{ flexShrink: 0 }} />
                           )}
                         </React.Fragment>
                       );
@@ -733,16 +734,16 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
             <div
               style={{
                 background: '#f8fafc',
-                borderRadius: '14px',
-                padding: '1.25rem 1.5rem',
+                borderRadius: '10px',
+                padding: '0.75rem 1rem',
                 border: '1px solid #e2e8f0',
-                marginBottom: '2rem',
+                marginBottom: '1.25rem',
               }}
             >
-              <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155', marginBottom: '1rem' }}>
-                Tracking Status Flow (Radio Buttons)
+              <div style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#64748b', marginBottom: '0.45rem' }}>
+                Tracking Stage Selector
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.35rem' }}>
                 {WORKFLOW_STAGES.map((stg, idx) => {
                   const isChecked = (isEditing ? editFormData.stage : selectedEnquiry.stage) === stg.id;
                   const StageIcon = stg.icon;
@@ -757,12 +758,13 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                         style={{
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '0.5rem',
+                          gap: '0.3rem',
                           cursor: 'pointer',
-                          padding: '0.5rem 0.85rem',
-                          borderRadius: '8px',
+                          padding: '0.22rem 0.5rem',
+                          borderRadius: '6px',
                           background: isChecked ? `${stg.color}15` : '#ffffff',
                           border: isChecked ? `1.5px solid ${stg.color}` : '1px solid #cbd5e1',
+                          transition: 'all 0.15s ease',
                         }}
                       >
                         <input
@@ -770,14 +772,14 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                           name="modal-stage"
                           checked={isChecked}
                           onChange={() => {}}
-                          style={{ accentColor: stg.color, cursor: 'pointer' }}
+                          style={{ accentColor: stg.color, cursor: 'pointer', transform: 'scale(0.8)' }}
                         />
-                        <StageIcon size={16} color={isChecked ? stg.color : '#64748b'} />
-                        <span style={{ fontSize: '0.85rem', fontWeight: isChecked ? 700 : 500, color: isChecked ? stg.color : '#475569' }}>
+                        <StageIcon size={13} color={isChecked ? stg.color : '#64748b'} />
+                        <span style={{ fontSize: '0.73rem', fontWeight: isChecked ? 700 : 500, color: isChecked ? stg.color : '#475569', whitespace: 'nowrap' }}>
                           {stg.label}
                         </span>
                       </label>
-                      {idx < WORKFLOW_STAGES.length - 1 && <ChevronRight size={16} color="#cbd5e1" />}
+                      {idx < WORKFLOW_STAGES.length - 1 && <ChevronRight size={12} color="#cbd5e1" style={{ flexShrink: 0 }} />}
                     </React.Fragment>
                   );
                 })}
