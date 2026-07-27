@@ -22,6 +22,26 @@ import {
 } from 'lucide-react';
 import { getApiUrl } from '../config';
 import { OrderTracking } from '../components/ui/order-tracking';
+import confetti from 'canvas-confetti';
+
+const triggerCelebration = () => {
+  const count = 200;
+  const defaults = { origin: { y: 0.6 } };
+
+  function fire(particleRatio, opts) {
+    confetti({
+      ...defaults,
+      ...opts,
+      particleCount: Math.floor(count * particleRatio),
+    });
+  }
+
+  fire(0.25, { spread: 30, startVelocity: 60 });
+  fire(0.2, { spread: 70 });
+  fire(0.35, { spread: 110, decay: 0.91, scalar: 0.8 });
+  fire(0.1, { spread: 130, startVelocity: 30, decay: 0.92, scalar: 1.25 });
+  fire(0.1, { spread: 140, startVelocity: 50 });
+};
 
 const WORKFLOW_STAGES = [
   { id: 'received', label: 'Request Received', icon: Clock, color: '#3b82f6' },
@@ -162,6 +182,10 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
   const handleUpdateStage = async (enquiryId, newStage, e) => {
     if (e) e.stopPropagation();
     const nowStamp = getCurrentFormattedTime();
+
+    if (newStage === 'completed') {
+      triggerCelebration();
+    }
 
     setEnquiries((prev) =>
       prev.map((enq) => {
@@ -792,8 +816,12 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                       const currentIdx = stageOrder.indexOf(currentObj.stage || 'received');
                       if (currentIdx < stageOrder.length - 1) {
                         const nextStage = stageOrder[currentIdx + 1];
-                        if (isEditing) setEditFormData({ ...editFormData, stage: nextStage });
-                        else handleUpdateStage(selectedEnquiry.enquiry_id, nextStage);
+                        if (isEditing) {
+                          setEditFormData({ ...editFormData, stage: nextStage });
+                          if (nextStage === 'completed') triggerCelebration();
+                        } else {
+                          handleUpdateStage(selectedEnquiry.enquiry_id, nextStage);
+                        }
                       }
                     }}
                     disabled={['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf((isEditing ? editFormData : selectedEnquiry).stage || 'received') >= 4}
@@ -822,8 +850,12 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                 orientation="horizontal"
                 onStepClick={(index) => {
                   const targetStage = WORKFLOW_STAGES[index].id;
-                  if (isEditing) setEditFormData({ ...editFormData, stage: targetStage });
-                  else handleUpdateStage(selectedEnquiry.enquiry_id, targetStage);
+                  if (isEditing) {
+                    setEditFormData({ ...editFormData, stage: targetStage });
+                    if (targetStage === 'completed') triggerCelebration();
+                  } else {
+                    handleUpdateStage(selectedEnquiry.enquiry_id, targetStage);
+                  }
                 }}
                 className="w-full"
               />
