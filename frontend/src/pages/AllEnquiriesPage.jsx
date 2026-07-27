@@ -16,6 +16,7 @@ import {
   Package,
   File,
   CheckSquare,
+  ChevronLeft,
   ChevronRight,
   Filter,
 } from 'lucide-react';
@@ -543,8 +544,78 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                     border: '1px solid #f1f5f9',
                   }}
                 >
-                  <div style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#64748b', marginBottom: '0.45rem' }}>
-                    Live Order Tracking Timeline (Click Step to Update Status)
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginBottom: '0.5rem',
+                    }}
+                  >
+                    <div style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#64748b' }}>
+                      Live Order Tracking Timeline
+                    </div>
+
+                    {/* Prev / Next Buttons */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const stageOrder = ['received', 'approved', 'sent', 'buyer_approved', 'completed'];
+                          const currentIdx = stageOrder.indexOf(enq.stage || 'received');
+                          if (currentIdx > 0) {
+                            handleUpdateStage(enq.enquiry_id, stageOrder[currentIdx - 1]);
+                          }
+                        }}
+                        disabled={['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf(enq.stage || 'received') <= 0}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '2px',
+                          padding: '3px 8px',
+                          borderRadius: '6px',
+                          fontSize: '0.72rem',
+                          fontWeight: 600,
+                          background: ['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf(enq.stage || 'received') <= 0 ? '#f1f5f9' : '#ffffff',
+                          color: ['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf(enq.stage || 'received') <= 0 ? '#94a3b8' : '#1e293b',
+                          border: '1px solid #cbd5e1',
+                          cursor: ['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf(enq.stage || 'received') <= 0 ? 'not-allowed' : 'pointer',
+                          transition: 'all 0.15s ease',
+                        }}
+                      >
+                        <ChevronLeft size={13} />
+                        <span>Prev</span>
+                      </button>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const stageOrder = ['received', 'approved', 'sent', 'buyer_approved', 'completed'];
+                          const currentIdx = stageOrder.indexOf(enq.stage || 'received');
+                          if (currentIdx < stageOrder.length - 1) {
+                            handleUpdateStage(enq.enquiry_id, stageOrder[currentIdx + 1]);
+                          }
+                        }}
+                        disabled={['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf(enq.stage || 'received') >= 4}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '2px',
+                          padding: '3px 8px',
+                          borderRadius: '6px',
+                          fontSize: '0.72rem',
+                          fontWeight: 600,
+                          background: ['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf(enq.stage || 'received') >= 4 ? '#f1f5f9' : '#1e293b',
+                          color: ['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf(enq.stage || 'received') >= 4 ? '#94a3b8' : '#ffffff',
+                          border: ['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf(enq.stage || 'received') >= 4 ? '1px solid #cbd5e1' : '1px solid #1e293b',
+                          cursor: ['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf(enq.stage || 'received') >= 4 ? 'not-allowed' : 'pointer',
+                          transition: 'all 0.15s ease',
+                        }}
+                      >
+                        <span>Next</span>
+                        <ChevronRight size={13} />
+                      </button>
+                    </div>
                   </div>
                   <OrderTracking
                     steps={getStepsForEnquiry(enq)}
@@ -667,8 +738,84 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                 marginBottom: '1.25rem',
               }}
             >
-              <div style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#64748b', marginBottom: '0.45rem' }}>
-                Live Order Tracking Timeline (Click Step to Update Status)
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                <div style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#64748b' }}>
+                  Live Order Tracking Timeline
+                </div>
+
+                {/* Modal Prev / Next Buttons */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const currentObj = isEditing ? editFormData : selectedEnquiry;
+                      const stageOrder = ['received', 'approved', 'sent', 'buyer_approved', 'completed'];
+                      const currentIdx = stageOrder.indexOf(currentObj.stage || 'received');
+                      if (currentIdx > 0) {
+                        const prevStage = stageOrder[currentIdx - 1];
+                        if (isEditing) setEditFormData({ ...editFormData, stage: prevStage });
+                        else handleUpdateStage(selectedEnquiry.enquiry_id, prevStage);
+                      }
+                    }}
+                    disabled={['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf((isEditing ? editFormData : selectedEnquiry).stage || 'received') <= 0}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '2px',
+                      padding: '3px 8px',
+                      borderRadius: '6px',
+                      fontSize: '0.72rem',
+                      fontWeight: 600,
+                      background: ['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf((isEditing ? editFormData : selectedEnquiry).stage || 'received') <= 0 ? '#f1f5f9' : '#ffffff',
+                      color: ['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf((isEditing ? editFormData : selectedEnquiry).stage || 'received') <= 0 ? '#94a3b8' : '#1e293b',
+                      border: '1px solid #cbd5e1',
+                      cursor: ['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf((isEditing ? editFormData : selectedEnquiry).stage || 'received') <= 0 ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    <ChevronLeft size={13} />
+                    <span>Prev</span>
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const currentObj = isEditing ? editFormData : selectedEnquiry;
+                      const stageOrder = ['received', 'approved', 'sent', 'buyer_approved', 'completed'];
+                      const currentIdx = stageOrder.indexOf(currentObj.stage || 'received');
+                      if (currentIdx < stageOrder.length - 1) {
+                        const nextStage = stageOrder[currentIdx + 1];
+                        if (isEditing) setEditFormData({ ...editFormData, stage: nextStage });
+                        else handleUpdateStage(selectedEnquiry.enquiry_id, nextStage);
+                      }
+                    }}
+                    disabled={['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf((isEditing ? editFormData : selectedEnquiry).stage || 'received') >= 4}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '2px',
+                      padding: '3px 8px',
+                      borderRadius: '6px',
+                      fontSize: '0.72rem',
+                      fontWeight: 600,
+                      background: ['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf((isEditing ? editFormData : selectedEnquiry).stage || 'received') >= 4 ? '#f1f5f9' : '#1e293b',
+                      color: ['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf((isEditing ? editFormData : selectedEnquiry).stage || 'received') >= 4 ? '#94a3b8' : '#ffffff',
+                      border: ['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf((isEditing ? editFormData : selectedEnquiry).stage || 'received') >= 4 ? '1px solid #cbd5e1' : '1px solid #1e293b',
+                      cursor: ['received', 'approved', 'sent', 'buyer_approved', 'completed'].indexOf((isEditing ? editFormData : selectedEnquiry).stage || 'received') >= 4 ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    <span>Next</span>
+                    <ChevronRight size={13} />
+                  </button>
+                </div>
               </div>
               <OrderTracking
                 steps={getStepsForEnquiry(isEditing ? editFormData : selectedEnquiry)}
