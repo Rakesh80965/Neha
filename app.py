@@ -822,6 +822,28 @@ def get_enquiries():
     enquiries = session.get("enquiries", [])
     return jsonify({"enquiries": enquiries, "total_count": len(enquiries)})
 
+@app.route("/api/enquiries/update", methods=["POST"])
+@login_required
+def update_enquiry():
+    data = request.get_json() or {}
+    enquiry_id = data.get("enquiry_id")
+    if not enquiry_id:
+        return jsonify({"error": "enquiry_id is required"}), 400
+
+    enquiries = session.get("enquiries", [])
+    updated = False
+    for i, enq in enumerate(enquiries):
+        if enq.get("enquiry_id") == enquiry_id:
+            enquiries[i].update(data)
+            updated = True
+            break
+
+    if not updated:
+        enquiries.append(data)
+
+    session["enquiries"] = enquiries
+    return jsonify({"status": "ok", "enquiry_id": enquiry_id})
+
 @app.route("/search", methods=["POST"])
 @app.route("/api/search", methods=["POST"])
 @login_required

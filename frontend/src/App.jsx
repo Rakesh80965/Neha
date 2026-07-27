@@ -12,6 +12,7 @@ import { WishlistPage } from './pages/WishlistPage';
 import { AllSamplesPage } from './pages/AllSamplesPage';
 import { UploadPage } from './pages/UploadPage';
 import { EnquiryRegistrationPage } from './pages/EnquiryRegistrationPage';
+import { AllEnquiriesPage } from './pages/AllEnquiriesPage';
 import { getApiUrl } from './config';
 
 const MainApp = () => {
@@ -87,15 +88,21 @@ const MainApp = () => {
           wishlistBadgeCount={wishlistData?.total_count || 0}
         />
 
-        <main style={{ flex: 1, padding: activeTab === 'enquiry' ? '0' : '2.2rem 2.5rem', overflowY: 'auto', background: activeTab === 'enquiry' ? '#f8fafc' : 'var(--cream)' }}>
+        <main style={{ flex: 1, padding: activeTab === 'enquiry' || activeTab === 'all-enquiries' ? '0' : '2.2rem 2.5rem', overflowY: 'auto', background: activeTab === 'enquiry' || activeTab === 'all-enquiries' ? '#f8fafc' : 'var(--cream)' }}>
           {activeTab === 'enquiry' && (
             <EnquiryRegistrationPage
-              onCancel={() => setActiveTab('search')}
+              onCancel={() => setActiveTab('all-enquiries')}
               onSavedSuccess={() => {
-                setToast({ message: 'Buyer enquiry created successfully!', type: 'success' });
-                setActiveTab('wishlist');
+                setToast({ message: 'Buyer enquiry created & Wishlist Group initialized!', type: 'success' });
+                setActiveTab('all-enquiries');
               }}
             />
+          )}
+
+          {activeTab === 'all-enquiries' && (
+            <div style={{ padding: '2rem' }}>
+              <AllEnquiriesPage onOpenRegistration={() => setActiveTab('enquiry')} />
+            </div>
           )}
 
           {activeTab === 'search' && (

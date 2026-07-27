@@ -1,13 +1,14 @@
 import React from 'react';
-import { Search, Heart, Grid, UploadCloud, PlusCircle, FileText } from 'lucide-react';
+import { Search, Heart, Grid, UploadCloud, PlusCircle, FileText, Layers } from 'lucide-react';
 
 export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => {
   const navItems = [
-    { id: 'enquiry',  label: 'Enquiry Registration', icon: FileText, highlight: true },
-    { id: 'search',   label: 'Smart Search',         icon: Search },
-    { id: 'wishlist', label: 'Wishlists',             icon: Heart,       badge: wishlistBadgeCount },
-    { id: 'data',     label: 'All Samples',           icon: Grid },
-    { id: 'upload',   label: 'Upload Sheet',          icon: UploadCloud },
+    { id: 'enquiry',       label: 'Enquiry Registration', icon: FileText, highlight: true },
+    { id: 'all-enquiries', label: 'All Enquiries',        icon: Layers },
+    { id: 'search',        label: 'Smart Search',         icon: Search },
+    { id: 'wishlist',      label: 'Wishlists',             icon: Heart,       badge: wishlistBadgeCount },
+    { id: 'data',          label: 'All Samples',           icon: Grid },
+    { id: 'upload',        label: 'Upload Sheet',          icon: UploadCloud },
   ];
 
   return (
