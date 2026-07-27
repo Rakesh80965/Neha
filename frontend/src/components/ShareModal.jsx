@@ -8,15 +8,17 @@ export const ShareModal = ({ isOpen, onClose, fdsNo, buyerName, enquiryId, sampl
 
   if (!isOpen) return null;
 
-  const title = `NSL Feasibility Report (${fdsNo || enquiryId || 'Order'})`;
-  const shareText = `NSL Feasibility & Buyer Order\nBuyer: ${buyerName || 'Client'}\nFDS No / ID: ${fdsNo || enquiryId}\nSamples: ${samples.map((s) => `#${s.sample_no}`).join(', ') || 'Standard'}\nStatus: Completed 🎉`;
+  const targetId = document.getElementById(printableId) ? printableId : 'share-modal-pdf-template';
+  const displayId = fdsNo || enquiryId || 'Order';
+  const title = `NSL Feasibility Report (${displayId})`;
+  const shareText = `NSL Feasibility & Buyer Order\nBuyer: ${buyerName || 'Client'}\nFDS No / ID: ${displayId}\nSamples: ${samples.map((s) => `#${s.sample_no}`).join(', ') || 'Standard'}\nStatus: Completed 🎉`;
 
   const handleDownloadPDF = async () => {
     setDownloading(true);
     try {
       await generateFDSPDF(
-        printableId,
-        `NSL_FDS_${fdsNo || enquiryId || 'Report'}.pdf`,
+        targetId,
+        `NSL_FDS_${displayId}.pdf`,
         title,
         shareText
       );
@@ -79,7 +81,7 @@ export const ShareModal = ({ isOpen, onClose, fdsNo, buyerName, enquiryId, sampl
           Share & Export Options
         </div>
         <h3 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.03em', marginBottom: '1.25rem' }}>
-          Share {fdsNo || enquiryId || 'Order Report'}
+          Share {displayId}
         </h3>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
@@ -169,6 +171,101 @@ export const ShareModal = ({ isOpen, onClose, fdsNo, buyerName, enquiryId, sampl
         <button onClick={onClose} className="btn-secondary" style={{ width: '100%' }}>
           Done
         </button>
+
+        {/* HIDDEN COMPLETE FDS PDF TEMPLATE CONTAINER (Guarantees PDF element is ALWAYS found) */}
+        <div style={{ position: 'absolute', left: '-9999px', top: '-9999px', width: '800px', pointerEvents: 'none' }}>
+          <div id="share-modal-pdf-template" style={{ padding: '20px', background: '#ffffff', color: '#0f172a', fontFamily: 'Arial, sans-serif' }}>
+            <div style={{ borderBottom: '2px solid #0f172a', paddingBottom: '10px', marginBottom: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <div style={{ fontSize: '20px', fontWeight: '900', color: '#dc2626' }}>NSL TEXTILES LTD</div>
+                <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#475569', textTransform: 'uppercase' }}>Cotton to Clothing — Official Feasibility & Buyer Report</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '13px', fontWeight: 'bold' }}>FDS NO: <span style={{ color: '#dc2626' }}>{displayId}</span></div>
+                <div style={{ fontSize: '11px', color: '#64748b' }}>DATE: {new Date().toLocaleDateString('en-GB')}</div>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '15px', background: '#f8fafc', border: '1px solid #cbd5e1', padding: '10px', borderRadius: '6px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '6px', color: '#1e293b' }}>1. Buyer Order Specifications</div>
+              <table style={{ width: '100%', fontSize: '11px', borderCollapse: 'collapse' }}>
+                <tbody>
+                  <tr>
+                    <td style={{ padding: '4px', fontWeight: 'bold', color: '#475569' }}>End Buyer:</td>
+                    <td style={{ padding: '4px', fontWeight: 'bold', color: '#0f172a' }}>{buyerName || 'Client'}</td>
+                    <td style={{ padding: '4px', fontWeight: 'bold', color: '#475569' }}>Order / FDS ID:</td>
+                    <td style={{ padding: '4px', fontWeight: 'bold', color: '#0f172a' }}>{displayId}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ padding: '4px', fontWeight: 'bold', color: '#475569' }}>Status:</td>
+                    <td style={{ padding: '4px', fontWeight: 'bold', color: '#16a34a' }}>Completed & Finalized</td>
+                    <td style={{ padding: '4px', fontWeight: 'bold', color: '#475569' }}>Selected Samples:</td>
+                    <td style={{ padding: '4px', fontWeight: 'bold', color: '#0f172a' }}>{samples.map(s => `#${s.sample_no}`).join(', ') || 'Standard'}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {samples && samples.length > 0 && (
+              <div style={{ marginBottom: '15px', border: '1px solid #cbd5e1', padding: '10px', borderRadius: '6px' }}>
+                <div style={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '8px' }}>2. Selected Fabric Samples ({samples.length})</div>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {samples.map((s) => (
+                    <div key={s.sample_no} style={{ border: '1px solid #cbd5e1', padding: '6px 10px', borderRadius: '4px', background: '#fafafa', fontSize: '10px' }}>
+                      <strong>#{s.sample_no}</strong> — {s.article || 'Standard'} | {s.gsm || 140} GSM | {s.weave || 'TWILL'} | {s.blend || 'COTTON'}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div style={{ border: '1px solid #0f172a', padding: '8px', borderRadius: '4px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '6px' }}>3. NSL Feasibility Technical Attributes & Test Commitments</div>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '10px' }}>
+                <thead>
+                  <tr style={{ background: '#f1f5f9' }}>
+                    <th style={{ border: '1px solid #000', padding: '4px', textAlign: 'left' }}>Test Parameter</th>
+                    <th style={{ border: '1px solid #000', padding: '4px', textAlign: 'left' }}>Customer Requirement</th>
+                    <th style={{ border: '1px solid #000', padding: '4px', textAlign: 'left' }}>NSL Commitment</th>
+                    <th style={{ border: '1px solid #000', padding: '4px', textAlign: 'left' }}>Test Method</th>
+                    <th style={{ border: '1px solid #000', padding: '4px', textAlign: 'left' }}>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { name: 'FABRIC WEIGHT', req: '+/-5%', commit: '+/-5%', method: 'ISO 3801', rem: '' },
+                    { name: 'YARN COUNT', req: '+/-5%', commit: '+/-5%', method: 'ISO 7221-5', rem: '' },
+                    { name: 'CONSTRUCTION', req: '+/-5%', commit: '+/-5%', method: 'EN 1049-2', rem: '' },
+                    { name: 'FABRIC WIDTH', req: '-', commit: '+/-1"', method: 'IHM', rem: '' },
+                    { name: 'FIBER CONTENT', req: '-', commit: '100% COTTON', method: 'AATCC20/20A:2018', rem: '' },
+                    { name: 'DIMENSIONAL STABILITY', req: '+1 TO -3%', commit: '+1 TO -5%', method: 'ISO 6330', rem: 'MILL RESPONSIBLE FOR HOME LAUNDRY ONLY' },
+                    { name: 'TEAR STRENGTH', req: '1.0 KGF', commit: '1.0 KGF', method: 'ISO 13937-1', rem: '' },
+                    { name: 'TENSILE STRENGTH', req: '16 KGF', commit: 'WARP:16 KGF, WEFT: 9 KGF', method: 'ISO 13934-2', rem: '' },
+                    { name: 'SEAM SLIPPAGE', req: '6MM @ 10 KGF', commit: '6MM @ 8 KGF', method: 'ISO 13936-1', rem: '' },
+                    { name: 'SEAM STRENGTH', req: '6MM @ 14 KGF', commit: '6MM @ 12 KGF', method: 'ISO 13935-2', rem: '' },
+                    { name: 'BOW', req: '-', commit: '3.0%', method: 'ASTM D 3882', rem: '' },
+                    { name: 'SKEW', req: '-', commit: '4.0%', method: 'ASTM D 3882', rem: 'AFTERWASH SKEW 5%-6%' },
+                    { name: 'PH VALUE', req: '4.0 - 7.5', commit: '4.0 - 7.5', method: 'ISO 3071', rem: '' },
+                    { name: 'CF TO WASHING', req: 'CC:4,CS:4,SS:4-5', commit: 'CC:4,CS:4, DK COLORS 3-4,SS:4-5', method: 'ISO 105 C06', rem: '' },
+                    { name: 'CF TO RUBBING-DRY', req: '4-5,DARK COLORS:4', commit: '4, DARK SHADES:3-4', method: 'ISO 105 X12', rem: '' },
+                    { name: 'CF TO RUBBING-WET', req: '4,DARK COLORS:3-4', commit: '3, DARK SHADES:2-3', method: 'ISO 105 X12', rem: '' },
+                    { name: 'CF TO PERSPIRATION', req: 'CC:4,CS:4,SS:4-5', commit: 'CC:4,CS:4, DK COLORS 3-4,SS:4-5', method: 'ISO 105 E04', rem: 'FOR ALL OVER PRINT ONLY' },
+                    { name: 'CF TO WATER', req: '-', commit: 'CC:4,CS:4, DK COLORS 3-4,SS:4-5', method: 'ISO 105 E01', rem: '' },
+                    { name: 'CF TO LIGHT', req: '4', commit: 'LIGHT SHADES:3 / OTHERS:3-4', method: 'ISO 105 B02', rem: 'SPECIALLY ON FLUOROCENT DYE' },
+                  ].map((row, idx) => (
+                    <tr key={idx} style={{ background: idx % 2 === 0 ? '#fff' : '#f9fafb' }}>
+                      <td style={{ border: '1px solid #000', padding: '3px 5px', fontWeight: 'bold' }}>{row.name}</td>
+                      <td style={{ border: '1px solid #000', padding: '3px 5px' }}>{row.req}</td>
+                      <td style={{ border: '1px solid #000', padding: '3px 5px', fontWeight: 'bold', color: '#059669' }}>{row.commit}</td>
+                      <td style={{ border: '1px solid #000', padding: '3px 5px', color: '#475569' }}>{row.method}</td>
+                      <td style={{ border: '1px solid #000', padding: '3px 5px' }}>{row.rem || '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
