@@ -77,7 +77,7 @@ export const LoginPage = ({ onSwitchToRegister }) => {
             Search.
           </div>
           <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.95rem', fontWeight: 400, maxWidth: '340px', lineHeight: 1.6 }}>
-            Priority-ranked matching of fabric samples against your buyer requirements.
+            Recommendation engine for accurate and faster fabric sample library selection.
           </p>
         </div>
 
