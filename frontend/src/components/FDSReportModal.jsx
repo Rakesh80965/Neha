@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { X, CheckCircle, Share2, Printer, Send, Layers, Copy, Check } from 'lucide-react';
+import { X, CheckCircle, Share2, Printer, Send, Layers, Copy, Check, FileDown } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { generateFDSPDF } from '../utils/pdfGenerator';
 
 const DEFAULT_PARAMETERS = [
   { name: 'FABRIC WEIGHT', method: 'ISO 3801', custReq: '+/-5%', nslCommit: '+/-5%', remarks: '' },
@@ -42,6 +43,15 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
   const [parameters, setParameters] = useState(DEFAULT_PARAMETERS);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+
+  const handleSharePDF = () => {
+    generateFDSPDF(
+      'fds-report-printable-area',
+      `NSL_FDS_${fdsNo}.pdf`,
+      `NSL Feasibility Report - ${fdsNo}`,
+      `NSL Feasibility & Buyer Order Report (${fdsNo}) for ${endBuyer}.`
+    );
+  };
 
   const handleParamChange = (index, field, value) => {
     setParameters((prev) => {
@@ -177,8 +187,11 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
           </div>
 
           <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button onClick={() => window.print()} className="btn-secondary" style={{ padding: '0.4rem 0.85rem', fontSize: '0.78rem' }}>
-              <Printer size={14} /> Print / PDF
+            <button onClick={handleSharePDF} className="btn-primary-red" style={{ padding: '0.45rem 1rem', fontSize: '0.8rem', gap: '0.4rem' }}>
+              <FileDown size={15} /> Share PDF Document
+            </button>
+            <button onClick={() => window.print()} className="btn-secondary" style={{ padding: '0.45rem 0.85rem', fontSize: '0.78rem' }}>
+              <Printer size={14} /> Print
             </button>
           </div>
         </div>
@@ -212,7 +225,17 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
             </div>
 
             {/* Share Options */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <button
+                onClick={handleSharePDF}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                  padding: '0.45rem 0.85rem', background: '#dc2626', color: '#fff',
+                  borderRadius: '8px', border: 'none', fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer'
+                }}
+              >
+                <FileDown size={14} /> Share PDF
+              </button>
               <button
                 onClick={handleShareWhatsApp}
                 style={{
@@ -280,7 +303,7 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
         </div>
 
         {/* Word Document Style FDS Sheet */}
-        <div style={{ border: '2px solid #0f172a', borderRadius: '4px', background: '#ffffff', padding: '1.25rem' }}>
+        <div id="fds-report-printable-area" style={{ border: '2px solid #0f172a', borderRadius: '4px', background: '#ffffff', padding: '1.25rem' }}>
           {/* Header Metadata Grid */}
           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '1rem' }}>
             <tbody>

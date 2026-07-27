@@ -20,10 +20,12 @@ import {
   ChevronRight,
   Filter,
   Share2,
+  FileDown,
 } from 'lucide-react';
 import { getApiUrl } from '../config';
 import { OrderTracking } from '../components/ui/order-tracking';
 import confetti from 'canvas-confetti';
+import { generateFDSPDF } from '../utils/pdfGenerator';
 
 const triggerCelebration = () => {
   const count = 200;
@@ -551,31 +553,26 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        const shareText = `NSL Feasibility & Buyer Order\nBuyer: ${enq.buyer_name}\nEnquiry ID: ${enq.enquiry_id}\nStatus: ${enq.stage === 'completed' ? 'Completed 🎉' : enq.stage}\nSamples: ${enq.selected_samples ? enq.selected_samples.map((s) => `#${s.sample_no}`).join(', ') : 'Standard'}`;
-                        if (navigator.share) {
-                          navigator.share({ title: `Order ${enq.enquiry_id}`, text: shareText, url: window.location.href }).catch(() => {});
-                        } else {
-                          navigator.clipboard.writeText(shareText);
-                          alert(`Copied Order & FDS details to clipboard!\n\n${shareText}`);
-                        }
+                        // Open detail modal to view/print/share full PDF document
+                        handleOpenDetail(enq);
                       }}
                       style={{
                         padding: '0.25rem 0.65rem',
                         borderRadius: '6px',
                         fontSize: '0.75rem',
                         fontWeight: 700,
-                        background: '#f1f5f9',
-                        color: '#1e293b',
-                        border: '1px solid #cbd5e1',
+                        background: '#dc2626',
+                        color: '#ffffff',
+                        border: '1px solid #b91c1c',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '0.3rem',
                         cursor: 'pointer',
                       }}
-                      title="Share Order Details"
+                      title="View & Share PDF Report"
                     >
-                      <Share2 size={12} />
-                      <span>Share</span>
+                      <FileDown size={12} />
+                      <span>Share PDF</span>
                     </button>
 
                     <span
