@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, CheckCircle, Share2, Printer, Send, Layers, Copy, Check, FileDown } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { generateFDSPDF } from '../utils/pdfGenerator';
+import { ShareModal } from './ShareModal';
 
 const DEFAULT_PARAMETERS = [
   { name: 'FABRIC WEIGHT', method: 'ISO 3801', custReq: '+/-5%', nslCommit: '+/-5%', remarks: '' },
@@ -42,7 +43,7 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
 
   const [parameters, setParameters] = useState(DEFAULT_PARAMETERS);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [copiedLink, setCopiedLink] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   const handleSharePDF = async () => {
@@ -476,6 +477,16 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
             </button>
           )}
         </div>
+
+        {/* Share Modal Dialog */}
+        <ShareModal
+          isOpen={shareModalOpen}
+          onClose={() => setShareModalOpen(false)}
+          fdsNo={fdsNo}
+          buyerName={endBuyer}
+          samples={samples}
+          printableId="fds-report-printable-area"
+        />
       </div>
     </div>
   );

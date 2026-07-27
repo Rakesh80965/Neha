@@ -9,7 +9,7 @@ export const generateFDSPDF = async (elementIdOrNode, filename = 'NSL_FDS_Report
   }
 
   const opt = {
-    margin: [8, 8, 8, 8],
+    margin: [6, 6, 6, 6],
     filename: filename,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0 },
@@ -18,15 +18,32 @@ export const generateFDSPDF = async (elementIdOrNode, filename = 'NSL_FDS_Report
 
   try {
     const html2pdfFunc = typeof html2pdf === 'function' ? html2pdf : (html2pdf.default || window.html2pdf);
-    
-    if (html2pdfFunc) {
-      // 1. Generate and save/download PDF directly to user's device
-      await html2pdfFunc().set(opt).from(targetElement).save();
 
-      // 2. Web Share API check
+    if (html2pdfFunc) {
+      // Clone element so inputs render as crisp spans in canvas/PDF
+      const elementClone = targetElement.cloneNode(true);
+      const origInputs = targetElement.querySelectorAll('input');
+      const cloneInputs = elementClone.querySelectorAll('input');
+
+      origInputs.forEach((inp, idx) => {
+        if (cloneInputs[idx]) {
+          const span = document.createElement('span');
+          span.textContent = inp.value || '—';
+          span.style.fontWeight = inp.style.fontWeight || '700';
+          span.style.color = inp.style.color || '#0f172a';
+          span.style.fontSize = inp.style.fontSize || '0.85rem';
+          span.style.fontFamily = 'Arial, sans-serif';
+          cloneInputs[idx].parentNode.replaceChild(span, cloneInputs[idx]);
+        }
+      });
+
+      // 1. Generate & download PDF file directly to device
+      await html2pdfFunc().set(opt).from(elementClone).save();
+
+      // 2. Web Share API check for PDF file attachment (if supported synchronously)
       if (navigator.share) {
         try {
-          const pdfBlob = await html2pdfFunc().set(opt).from(targetElement).output('blob');
+          const pdfBlob = await html2pdfFunc().set(opt).from(elementClone).output('blob');
           if (pdfBlob) {
             const pdfFile = new File([pdfBlob], filename, { type: 'application/pdf' });
             if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
@@ -39,14 +56,18 @@ export const generateFDSPDF = async (elementIdOrNode, filename = 'NSL_FDS_Report
             }
           }
         } catch (shareErr) {
-          console.log('File share fallback:', shareErr);
+          console.log('Web share fallback:', shareErr);
         }
 
-        // Text share fallback if browser can't share PDF file directly
-        await navigator.share({
-          title: shareTitle,
-          text: `${shareText}\n\nPDF Report saved as ${filename}`,
-        });
+        // Web Share API text fallback if files aren't shareable on this browser/OS
+        try {
+          await navigator.share({
+            title: shareTitle,
+            text: `${shareText}\n\nPDF Report: ${filename}`,
+          });
+        } catch (e) {
+          // ignore user cancel
+        }
       }
       return true;
     }
@@ -54,7 +75,7 @@ export const generateFDSPDF = async (elementIdOrNode, filename = 'NSL_FDS_Report
     console.error('html2pdf error, using print fallback:', err);
   }
 
-  // Fallback if library fails
+  // Fallback to native print window
   window.print();
   return true;
 };

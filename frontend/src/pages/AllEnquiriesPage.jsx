@@ -26,6 +26,7 @@ import { getApiUrl } from '../config';
 import { OrderTracking } from '../components/ui/order-tracking';
 import confetti from 'canvas-confetti';
 import { generateFDSPDF } from '../utils/pdfGenerator';
+import { ShareModal } from '../components/ShareModal';
 
 const triggerCelebration = () => {
   const count = 200;
@@ -155,6 +156,7 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStageFilter, setSelectedStageFilter] = useState('ALL');
   const [selectedEnquiry, setSelectedEnquiry] = useState(null);
+  const [activeShareEnquiry, setActiveShareEnquiry] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editFormData, setEditFormData] = useState(null);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState('');
@@ -553,8 +555,7 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        // Open detail modal to view/print/share full PDF document
-                        handleOpenDetail(enq);
+                        setActiveShareEnquiry(enq);
                       }}
                       style={{
                         padding: '0.25rem 0.65rem',
@@ -1247,6 +1248,18 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
             </div>
           </div>
         </div>
+      )}
+      {/* Share Modal */}
+      {activeShareEnquiry && (
+        <ShareModal
+          isOpen={!!activeShareEnquiry}
+          onClose={() => setActiveShareEnquiry(null)}
+          fdsNo={activeShareEnquiry.fds_report?.fdsNo || activeShareEnquiry.enquiry_id}
+          buyerName={activeShareEnquiry.buyer_name}
+          enquiryId={activeShareEnquiry.enquiry_id}
+          samples={activeShareEnquiry.selected_samples || []}
+          printableId="enquiry-detail-printable-sheet"
+        />
       )}
     </div>
   );
