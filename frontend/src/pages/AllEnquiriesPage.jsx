@@ -533,98 +533,25 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                   </p>
                 )}
 
-                {/* Step-by-Step Radio Button Tracking Flow */}
+                {/* Live Order Tracking Timeline */}
                 <div
                   onClick={(e) => e.stopPropagation()}
                   style={{
                     background: '#f8fafc',
                     borderRadius: '10px',
-                    padding: '0.65rem 0.85rem',
+                    padding: '0.75rem 1rem',
                     border: '1px solid #f1f5f9',
                   }}
                 >
-                  <div
-                    style={{
-                      fontSize: '0.68rem',
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.06em',
-                      color: '#64748b',
-                      marginBottom: '0.45rem',
-                    }}
-                  >
-                    Update Stage Status
+                  <div style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#64748b', marginBottom: '0.45rem' }}>
+                    Live Order Tracking Timeline (Click Step to Update Status)
                   </div>
-
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      flexWrap: 'wrap',
-                      gap: '0.35rem',
-                    }}
-                  >
-                    {WORKFLOW_STAGES.map((stg, idx) => {
-                      const isChecked = enq.stage === stg.id;
-                      const StageIcon = stg.icon;
-
-                      return (
-                        <React.Fragment key={stg.id}>
-                          <label
-                            onClick={(e) => handleUpdateStage(enq.enquiry_id, stg.id, e)}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '0.3rem',
-                              cursor: 'pointer',
-                              padding: '0.22rem 0.5rem',
-                              borderRadius: '6px',
-                              background: isChecked ? `${stg.color}15` : '#ffffff',
-                              border: isChecked ? `1.5px solid ${stg.color}` : '1px solid #cbd5e1',
-                              transition: 'all 0.15s ease',
-                            }}
-                          >
-                            <input
-                              type="radio"
-                              name={`stage-${enq.enquiry_id}`}
-                              checked={isChecked}
-                              onChange={() => {}}
-                              style={{ accentColor: stg.color, cursor: 'pointer', transform: 'scale(0.8)' }}
-                            />
-                            <StageIcon size={13} color={isChecked ? stg.color : '#64748b'} />
-                            <span
-                              style={{
-                                fontSize: '0.73rem',
-                                fontWeight: isChecked ? 700 : 500,
-                                color: isChecked ? stg.color : '#475569',
-                                whitespace: 'nowrap',
-                              }}
-                            >
-                              {stg.label}
-                            </span>
-                          </label>
-
-                          {idx < WORKFLOW_STAGES.length - 1 && (
-                            <ChevronRight size={12} color="#cbd5e1" style={{ flexShrink: 0 }} />
-                          )}
-                        </React.Fragment>
-                      );
-                    })}
-                  </div>
-
-                  {/* Integrated Shadcn OrderTracking Component */}
-                  <div style={{ marginTop: '1rem', paddingTop: '0.85rem', borderTop: '1px dashed #cbd5e1' }}>
-                    <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b', marginBottom: '0.5rem' }}>
-                      Live Order Tracking Timeline (Click Step to Update)
-                    </div>
-                    <OrderTracking
-                      steps={getStepsForEnquiry(enq)}
-                      orientation="horizontal"
-                      onStepClick={(index) => handleUpdateStage(enq.enquiry_id, WORKFLOW_STAGES[index].id)}
-                      className="w-full"
-                    />
-                  </div>
+                  <OrderTracking
+                    steps={getStepsForEnquiry(enq)}
+                    orientation="horizontal"
+                    onStepClick={(index) => handleUpdateStage(enq.enquiry_id, WORKFLOW_STAGES[index].id)}
+                    className="w-full"
+                  />
                 </div>
               </div>
             );
@@ -730,7 +657,7 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
               </div>
             )}
 
-            {/* Tracking Status Flow Header */}
+            {/* Live Order Tracking Timeline */}
             <div
               style={{
                 background: '#f8fafc',
@@ -740,67 +667,19 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                 marginBottom: '1.25rem',
               }}
             >
-              <div style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#64748b', marginBottom: '0.45rem' }}>
-                Tracking Stage Selector
+              <div style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#64748b', marginBottom: '0.45rem' }}>
+                Live Order Tracking Timeline (Click Step to Update Status)
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.35rem' }}>
-                {WORKFLOW_STAGES.map((stg, idx) => {
-                  const isChecked = (isEditing ? editFormData.stage : selectedEnquiry.stage) === stg.id;
-                  const StageIcon = stg.icon;
-
-                  return (
-                    <React.Fragment key={stg.id}>
-                      <label
-                        onClick={() => {
-                          if (isEditing) setEditFormData({ ...editFormData, stage: stg.id });
-                          else handleUpdateStage(selectedEnquiry.enquiry_id, stg.id);
-                        }}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.3rem',
-                          cursor: 'pointer',
-                          padding: '0.22rem 0.5rem',
-                          borderRadius: '6px',
-                          background: isChecked ? `${stg.color}15` : '#ffffff',
-                          border: isChecked ? `1.5px solid ${stg.color}` : '1px solid #cbd5e1',
-                          transition: 'all 0.15s ease',
-                        }}
-                      >
-                        <input
-                          type="radio"
-                          name="modal-stage"
-                          checked={isChecked}
-                          onChange={() => {}}
-                          style={{ accentColor: stg.color, cursor: 'pointer', transform: 'scale(0.8)' }}
-                        />
-                        <StageIcon size={13} color={isChecked ? stg.color : '#64748b'} />
-                        <span style={{ fontSize: '0.73rem', fontWeight: isChecked ? 700 : 500, color: isChecked ? stg.color : '#475569', whitespace: 'nowrap' }}>
-                          {stg.label}
-                        </span>
-                      </label>
-                      {idx < WORKFLOW_STAGES.length - 1 && <ChevronRight size={12} color="#cbd5e1" style={{ flexShrink: 0 }} />}
-                    </React.Fragment>
-                  );
-                })}
-              </div>
-
-              {/* Integrated Shadcn OrderTracking Timeline */}
-              <div style={{ marginTop: '1rem', paddingTop: '0.85rem', borderTop: '1px dashed #cbd5e1' }}>
-                <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b', marginBottom: '0.5rem' }}>
-                  Live Order Tracking Timeline (Click Step to Update)
-                </div>
-                <OrderTracking
-                  steps={getStepsForEnquiry(isEditing ? editFormData : selectedEnquiry)}
-                  orientation="horizontal"
-                  onStepClick={(index) => {
-                    const targetStage = WORKFLOW_STAGES[index].id;
-                    if (isEditing) setEditFormData({ ...editFormData, stage: targetStage });
-                    else handleUpdateStage(selectedEnquiry.enquiry_id, targetStage);
-                  }}
-                  className="w-full"
-                />
-              </div>
+              <OrderTracking
+                steps={getStepsForEnquiry(isEditing ? editFormData : selectedEnquiry)}
+                orientation="horizontal"
+                onStepClick={(index) => {
+                  const targetStage = WORKFLOW_STAGES[index].id;
+                  if (isEditing) setEditFormData({ ...editFormData, stage: targetStage });
+                  else handleUpdateStage(selectedEnquiry.enquiry_id, targetStage);
+                }}
+                className="w-full"
+              />
             </div>
 
             {/* Detail Grid / Edit Form */}
