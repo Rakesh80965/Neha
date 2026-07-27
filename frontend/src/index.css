@@ -1,8 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+}
 
 :root {
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
   --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+
+  /* Color Theme Tokens for Shadcn / Tailwind */
+  --primary:          #0E0E0E;
+  --primary-foreground:#FFFFFF;
+  --muted:            #EDEAE4;
+  --muted-foreground: #555555;
+  --foreground:       #111111;
+  --background:       #F2F0EB;
 
   /* Neue Montreal Editorial Palette */
   --cream:       #F2F0EB;
