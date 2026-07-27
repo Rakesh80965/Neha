@@ -758,6 +758,7 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
           }}
         >
           <div
+            id="enquiry-detail-printable-sheet"
             onClick={(e) => e.stopPropagation()}
             style={{
               background: '#ffffff',

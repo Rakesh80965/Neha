@@ -285,39 +285,40 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
           </div>
         )}
 
-        {/* Selected Fabric Samples Gallery */}
-        <div style={{ marginBottom: '1.5rem', background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0' }}>
-          <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b', marginBottom: '0.65rem' }}>
-            Selected Fabric Samples in this Order ({samples.length})
-          </div>
-          <div style={{ display: 'flex', gap: '0.85rem', overflowX: 'auto', paddingBottom: '0.35rem' }}>
-            {samples.map((s) => (
-              <div
-                key={s.sample_no}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '0.65rem',
-                  padding: '0.45rem 0.85rem', background: '#ffffff',
-                  borderRadius: '8px', border: '1px solid #cbd5e1', flexShrink: 0
-                }}
-              >
-                <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: '#1e293b', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 800 }}>
-                  #{s.sample_no}
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a' }}>
-                    #{s.sample_no} — {s.article || 'Standard'}
+        {/* ONE COMBINED PRINTABLE AREA FOR THE ENTIRE PDF DOCUMENT */}
+        <div id="fds-report-printable-area" style={{ border: '2px solid #0f172a', borderRadius: '6px', background: '#ffffff', padding: '1.25rem' }}>
+          {/* Selected Fabric Samples Gallery */}
+          <div style={{ marginBottom: '1.25rem', background: '#f8fafc', borderRadius: '8px', padding: '0.85rem', border: '1px solid #e2e8f0' }}>
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#1e293b', marginBottom: '0.55rem' }}>
+              Selected Fabric Samples in this Order ({samples.length})
+            </div>
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+              {samples.map((s) => (
+                <div
+                  key={s.sample_no}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '0.65rem',
+                    padding: '0.4rem 0.75rem', background: '#ffffff',
+                    borderRadius: '8px', border: '1px solid #cbd5e1', flexShrink: 0
+                  }}
+                >
+                  <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: '#1e293b', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 800 }}>
+                    #{s.sample_no}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                    {s.product} | {s.gsm} GSM
+                  <div>
+                    <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a' }}>
+                      #{s.sample_no} — {s.article || 'Standard'}
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                      {s.product} | {s.gsm} GSM
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Word Document Style FDS Sheet */}
-        <div id="fds-report-printable-area" style={{ border: '2px solid #0f172a', borderRadius: '4px', background: '#ffffff', padding: '1.25rem' }}>
+          {/* Word Document Style FDS Sheet */}
           {/* Header Metadata Grid */}
           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '1rem' }}>
             <tbody>
