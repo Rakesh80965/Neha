@@ -30,34 +30,45 @@ const WORKFLOW_STAGES = [
   { id: 'completed', label: 'Completed', icon: Package, color: '#059669' },
 ];
 
+const getCurrentFormattedTime = () => {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const hh = String(now.getHours()).padStart(2, '0');
+  const min = String(now.getMinutes()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd} ${hh}:${min}`;
+};
+
 const getStepsForEnquiry = (enq) => {
   const stageOrder = ['received', 'approved', 'sent', 'buyer_approved', 'completed'];
   const currentIdx = stageOrder.indexOf(enq?.stage || 'received');
+  const tsMap = enq?.stageTimestamps || {};
 
   return [
     {
       name: "Request Received",
-      timestamp: enq?.date_received ? `${enq.date_received} 09:00` : "2025-07-22 09:00",
+      timestamp: tsMap['received'] || (enq?.date_received ? `${enq.date_received} 09:00` : "2025-07-22 09:00"),
       isCompleted: currentIdx >= 0,
     },
     {
       name: "Request Approved",
-      timestamp: currentIdx >= 1 ? "2025-07-23 11:30" : "Pending",
+      timestamp: currentIdx >= 1 ? (tsMap['approved'] || "2025-07-23 11:30") : "Pending",
       isCompleted: currentIdx >= 1,
     },
     {
       name: "Samples Sent",
-      timestamp: currentIdx >= 2 ? "2025-07-24 14:15" : "Pending",
+      timestamp: currentIdx >= 2 ? (tsMap['sent'] || "2025-07-24 14:15") : "Pending",
       isCompleted: currentIdx >= 2,
     },
     {
       name: "Samples Approved",
-      timestamp: currentIdx >= 3 ? "2025-07-25 16:45" : "Pending",
+      timestamp: currentIdx >= 3 ? (tsMap['buyer_approved'] || "2025-07-25 16:45") : "Pending",
       isCompleted: currentIdx >= 3,
     },
     {
       name: "Completed",
-      timestamp: currentIdx >= 4 ? "2025-07-26 10:00" : "Pending",
+      timestamp: currentIdx >= 4 ? (tsMap['completed'] || "2025-07-26 10:00") : "Pending",
       isCompleted: currentIdx >= 4,
     },
   ];
@@ -149,12 +160,30 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
 
   const handleUpdateStage = async (enquiryId, newStage, e) => {
     if (e) e.stopPropagation();
+    const nowStamp = getCurrentFormattedTime();
+
     setEnquiries((prev) =>
-      prev.map((enq) => (enq.enquiry_id === enquiryId ? { ...enq, stage: newStage } : enq))
+      prev.map((enq) => {
+        if (enq.enquiry_id === enquiryId) {
+          const updatedTimestamps = {
+            ...(enq.stageTimestamps || {}),
+            [newStage]: nowStamp,
+          };
+          return { ...enq, stage: newStage, stageTimestamps: updatedTimestamps };
+        }
+        return enq;
+      })
     );
 
     if (selectedEnquiry && selectedEnquiry.enquiry_id === enquiryId) {
-      setSelectedEnquiry((prev) => ({ ...prev, stage: newStage }));
+      setSelectedEnquiry((prev) => ({
+        ...prev,
+        stage: newStage,
+        stageTimestamps: {
+          ...(prev.stageTimestamps || {}),
+          [newStage]: nowStamp,
+        },
+      }));
     }
 
     try {
@@ -162,7 +191,7 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ enquiry_id: enquiryId, stage: newStage }),
+        body: JSON.stringify({ enquiry_id: enquiryId, stage: newStage, timestamp: nowStamp }),
       });
     } catch (err) {
       // Ignore
@@ -584,11 +613,16 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                   </div>
 
                   {/* Integrated Shadcn OrderTracking Component */}
-                  <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px dashed #cbd5e1' }}>
-                    <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b', marginBottom: '0.85rem' }}>
-                      Visual Order Tracking Timeline
+                  <div style={{ marginTop: '1rem', paddingTop: '0.85rem', borderTop: '1px dashed #cbd5e1' }}>
+                    <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b', marginBottom: '0.5rem' }}>
+                      Live Order Tracking Timeline (Click Step to Update)
                     </div>
-                    <OrderTracking steps={getStepsForEnquiry(enq)} className="max-w-full" />
+                    <OrderTracking
+                      steps={getStepsForEnquiry(enq)}
+                      orientation="horizontal"
+                      onStepClick={(index) => handleUpdateStage(enq.enquiry_id, WORKFLOW_STAGES[index].id)}
+                      className="w-full"
+                    />
                   </div>
                 </div>
               </div>
@@ -750,11 +784,20 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
               </div>
 
               {/* Integrated Shadcn OrderTracking Timeline */}
-              <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px dashed #cbd5e1' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b', marginBottom: '0.85rem' }}>
-                  Live Order Tracking Timeline
+              <div style={{ marginTop: '1rem', paddingTop: '0.85rem', borderTop: '1px dashed #cbd5e1' }}>
+                <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b', marginBottom: '0.5rem' }}>
+                  Live Order Tracking Timeline (Click Step to Update)
                 </div>
-                <OrderTracking steps={getStepsForEnquiry(isEditing ? editFormData : selectedEnquiry)} className="max-w-full" />
+                <OrderTracking
+                  steps={getStepsForEnquiry(isEditing ? editFormData : selectedEnquiry)}
+                  orientation="horizontal"
+                  onStepClick={(index) => {
+                    const targetStage = WORKFLOW_STAGES[index].id;
+                    if (isEditing) setEditFormData({ ...editFormData, stage: targetStage });
+                    else handleUpdateStage(selectedEnquiry.enquiry_id, targetStage);
+                  }}
+                  className="w-full"
+                />
               </div>
             </div>
 
