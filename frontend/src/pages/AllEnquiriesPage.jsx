@@ -20,6 +20,7 @@ import {
   Filter,
 } from 'lucide-react';
 import { getApiUrl } from '../config';
+import { OrderTracking } from '../components/ui/order-tracking';
 
 const WORKFLOW_STAGES = [
   { id: 'received', label: 'Request Received', icon: Clock, color: '#3b82f6' },
@@ -28,6 +29,39 @@ const WORKFLOW_STAGES = [
   { id: 'buyer_approved', label: 'Samples Approved', icon: ThumbsUp, color: '#10b981' },
   { id: 'completed', label: 'Completed', icon: Package, color: '#059669' },
 ];
+
+const getStepsForEnquiry = (enq) => {
+  const stageOrder = ['received', 'approved', 'sent', 'buyer_approved', 'completed'];
+  const currentIdx = stageOrder.indexOf(enq?.stage || 'received');
+
+  return [
+    {
+      name: "Request Received",
+      timestamp: enq?.date_received ? `${enq.date_received} 09:00` : "2025-07-22 09:00",
+      isCompleted: currentIdx >= 0,
+    },
+    {
+      name: "Request Approved",
+      timestamp: currentIdx >= 1 ? "2025-07-23 11:30" : "Pending",
+      isCompleted: currentIdx >= 1,
+    },
+    {
+      name: "Samples Sent",
+      timestamp: currentIdx >= 2 ? "2025-07-24 14:15" : "Pending",
+      isCompleted: currentIdx >= 2,
+    },
+    {
+      name: "Samples Approved",
+      timestamp: currentIdx >= 3 ? "2025-07-25 16:45" : "Pending",
+      isCompleted: currentIdx >= 3,
+    },
+    {
+      name: "Completed",
+      timestamp: currentIdx >= 4 ? "2025-07-26 10:00" : "Pending",
+      isCompleted: currentIdx >= 4,
+    },
+  ];
+};
 
 const INITIAL_DEMO_ENQUIRIES = [
   {
@@ -548,6 +582,14 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                       );
                     })}
                   </div>
+
+                  {/* Integrated Shadcn OrderTracking Component */}
+                  <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px dashed #cbd5e1' }}>
+                    <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b', marginBottom: '0.85rem' }}>
+                      Visual Order Tracking Timeline
+                    </div>
+                    <OrderTracking steps={getStepsForEnquiry(enq)} className="max-w-full" />
+                  </div>
                 </div>
               </div>
             );
@@ -705,6 +747,14 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                     </React.Fragment>
                   );
                 })}
+              </div>
+
+              {/* Integrated Shadcn OrderTracking Timeline */}
+              <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px dashed #cbd5e1' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b', marginBottom: '0.85rem' }}>
+                  Live Order Tracking Timeline
+                </div>
+                <OrderTracking steps={getStepsForEnquiry(isEditing ? editFormData : selectedEnquiry)} className="max-w-full" />
               </div>
             </div>
 
