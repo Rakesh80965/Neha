@@ -762,6 +762,58 @@ def api_all_samples():
     samples = get_all_samples()
     return jsonify({"samples": samples, "total_count": len(samples)})
 
+@app.route("/api/enquiries/create", methods=["POST"])
+@login_required
+def create_enquiry():
+    data = request.get_json() or {}
+    buyer_name = data.get("buyer_name", "").strip()
+    if not buyer_name:
+        return jsonify({"error": "Buyer Name is required"}), 400
+
+    enquiries = session.get("enquiries", [])
+    enquiry = {
+        "enquiry_id": data.get("enquiry_id"),
+        "buyer_name": buyer_name,
+        "brand_name": data.get("brand_name"),
+        "company": data.get("company"),
+        "country": data.get("country"),
+        "contact_person": data.get("contact_person"),
+        "email": data.get("email"),
+        "phone_number": data.get("phone_number"),
+        "buyer_id": data.get("buyer_id"),
+        "date_received": data.get("date_received"),
+        "due_date": data.get("due_date"),
+        "priority": data.get("priority", "High"),
+        "requirement_type": data.get("requirement_type"),
+        "season": data.get("season"),
+        "quantity": data.get("quantity"),
+        "status": data.get("status", "New"),
+        "end_use": data.get("end_use"),
+        "summary": data.get("summary"),
+        "documents": data.get("documents", []),
+        "created_at": "2025-07-22",
+    }
+    enquiries.append(enquiry)
+    session["enquiries"] = enquiries
+
+    # Also automatically create a wishlist group for this buyer if not existing
+    try:
+        user_id = session["user_id"]
+        group_name = f"{buyer_name} ({data.get('season', 'Enquiry')})"
+        existing = sb_select("wishlist_groups", filters={"user_id": f"eq.{user_id}", "name": f"eq.{group_name}"})
+        if not existing:
+            sb_insert("wishlist_groups", {"user_id": user_id, "name": group_name})
+    except Exception:
+        pass
+
+    return jsonify({"status": "ok", "enquiry": enquiry})
+
+@app.route("/api/enquiries")
+@login_required
+def get_enquiries():
+    enquiries = session.get("enquiries", [])
+    return jsonify({"enquiries": enquiries, "total_count": len(enquiries)})
+
 @app.route("/search", methods=["POST"])
 @app.route("/api/search", methods=["POST"])
 @login_required

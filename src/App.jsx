@@ -11,6 +11,7 @@ import { SearchPage } from './pages/SearchPage';
 import { WishlistPage } from './pages/WishlistPage';
 import { AllSamplesPage } from './pages/AllSamplesPage';
 import { UploadPage } from './pages/UploadPage';
+import { EnquiryRegistrationPage } from './pages/EnquiryRegistrationPage';
 import { getApiUrl } from './config';
 
 const MainApp = () => {
@@ -58,41 +59,45 @@ const MainApp = () => {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gold-400)' }}>
+      <div style={{ minHeight: '100vh', background: 'var(--cream)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ textAlign: 'center' }}>
-          <div style={{ display: 'inline-block', width: '40px', height: '40px', border: '3px solid rgba(245,158,11,0.2)', borderTopColor: '#F59E0B', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-          <p style={{ marginTop: '1rem', fontSize: '0.95rem', color: 'var(--text-muted)' }}>Initializing Fabric Workspace...</p>
+          <div style={{ display: 'inline-block', width: '36px', height: '36px', border: '2.5px solid rgba(14,14,14,0.1)', borderTopColor: 'var(--charcoal)', borderRadius: '50%', animation: 'spin 0.75s linear infinite' }} />
+          <p style={{ marginTop: '1rem', fontSize: '0.88rem', color: 'var(--text-muted)', fontWeight: 500 }}>Initializing workspace…</p>
         </div>
       </div>
     );
   }
 
   if (!user) {
-    return (
-      <div style={{ position: 'relative' }}>
-        <div className="bg-ambient" />
-        {authMode === 'login' ? (
-          <LoginPage onSwitchToRegister={() => setAuthMode('register')} />
-        ) : (
-          <RegisterPage onSwitchToLogin={() => setAuthMode('login')} />
-        )}
-      </div>
+    return authMode === 'login' ? (
+      <LoginPage onSwitchToRegister={() => setAuthMode('register')} />
+    ) : (
+      <RegisterPage onSwitchToLogin={() => setAuthMode('login')} />
     );
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-      <div className="bg-ambient" />
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--cream)' }}>
       <Navbar />
 
-      <div style={{ display: 'flex', flex: 1, position: 'relative', zIndex: 1 }}>
+      <div style={{ display: 'flex', flex: 1 }}>
         <Sidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           wishlistBadgeCount={wishlistData?.total_count || 0}
         />
 
-        <main style={{ flex: 1, padding: '2.2rem', overflowY: 'auto' }}>
+        <main style={{ flex: 1, padding: activeTab === 'enquiry' ? '0' : '2.2rem 2.5rem', overflowY: 'auto', background: activeTab === 'enquiry' ? '#f8fafc' : 'var(--cream)' }}>
+          {activeTab === 'enquiry' && (
+            <EnquiryRegistrationPage
+              onCancel={() => setActiveTab('search')}
+              onSavedSuccess={() => {
+                setToast({ message: 'Buyer enquiry created successfully!', type: 'success' });
+                setActiveTab('wishlist');
+              }}
+            />
+          )}
+
           {activeTab === 'search' && (
             <SearchPage onOpenModal={(sample) => setActiveModalSample(sample)} />
           )}

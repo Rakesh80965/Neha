@@ -11,6 +11,7 @@ import { SearchPage } from './pages/SearchPage';
 import { WishlistPage } from './pages/WishlistPage';
 import { AllSamplesPage } from './pages/AllSamplesPage';
 import { UploadPage } from './pages/UploadPage';
+import { EnquiryRegistrationPage } from './pages/EnquiryRegistrationPage';
 import { getApiUrl } from './config';
 
 const MainApp = () => {
@@ -86,7 +87,17 @@ const MainApp = () => {
           wishlistBadgeCount={wishlistData?.total_count || 0}
         />
 
-        <main style={{ flex: 1, padding: '2.2rem 2.5rem', overflowY: 'auto', background: 'var(--cream)' }}>
+        <main style={{ flex: 1, padding: activeTab === 'enquiry' ? '0' : '2.2rem 2.5rem', overflowY: 'auto', background: activeTab === 'enquiry' ? '#f8fafc' : 'var(--cream)' }}>
+          {activeTab === 'enquiry' && (
+            <EnquiryRegistrationPage
+              onCancel={() => setActiveTab('search')}
+              onSavedSuccess={() => {
+                setToast({ message: 'Buyer enquiry created successfully!', type: 'success' });
+                setActiveTab('wishlist');
+              }}
+            />
+          )}
+
           {activeTab === 'search' && (
             <SearchPage onOpenModal={(sample) => setActiveModalSample(sample)} />
           )}

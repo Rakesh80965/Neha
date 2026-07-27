@@ -1,42 +1,68 @@
 import React from 'react';
-import { Search, Heart, Grid, UploadCloud, ChevronRight } from 'lucide-react';
+import { Search, Heart, Grid, UploadCloud, PlusCircle, FileText } from 'lucide-react';
 
 export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => {
   const navItems = [
-    { id: 'search', label: 'Smart Search', icon: Search },
-    { id: 'wishlist', label: 'Wishlists', icon: Heart, badge: wishlistBadgeCount },
-    { id: 'data', label: 'All Samples', icon: Grid },
-    { id: 'upload', label: 'Upload Sheet', icon: UploadCloud },
+    { id: 'enquiry',  label: 'Enquiry Registration', icon: FileText, highlight: true },
+    { id: 'search',   label: 'Smart Search',         icon: Search },
+    { id: 'wishlist', label: 'Wishlists',             icon: Heart,       badge: wishlistBadgeCount },
+    { id: 'data',     label: 'All Samples',           icon: Grid },
+    { id: 'upload',   label: 'Upload Sheet',          icon: UploadCloud },
   ];
 
   return (
     <aside
       style={{
-        width: '240px',
-        background: 'rgba(13, 18, 29, 0.7)',
-        backdropFilter: 'blur(20px)',
-        borderRight: '1px solid var(--border-subtle)',
-        padding: '2rem 1rem',
+        width: '230px',
+        background: 'var(--cream)',
+        borderRight: '1px solid var(--border)',
+        padding: '1.5rem 1rem 1.5rem',
         display: 'flex',
         flexDirection: 'column',
         flexShrink: 0,
       }}
     >
+      {/* Primary Action Button */}
+      <button
+        onClick={() => setActiveTab('enquiry')}
+        style={{
+          width: '100%',
+          padding: '0.75rem 1rem',
+          borderRadius: 'var(--radius-md)',
+          background: 'linear-gradient(135deg, #1e3a8a, #2563eb)',
+          color: '#ffffff',
+          fontWeight: 700,
+          fontSize: '0.86rem',
+          border: 'none',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.6rem',
+          marginBottom: '1.5rem',
+          boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
+          transition: 'transform 0.2s',
+        }}
+      >
+        <PlusCircle size={18} />
+        <span>+ Enquiry Registration</span>
+      </button>
+
+      {/* Section label */}
       <div
         style={{
-          fontSize: '0.68rem',
+          fontSize: '10px',
           fontWeight: 700,
           textTransform: 'uppercase',
           letterSpacing: '0.14em',
           color: 'var(--text-dim)',
-          padding: '0 0.8rem 1rem',
-          fontFamily: 'var(--font-heading)',
+          padding: '0 0.6rem 0.6rem',
         }}
       >
         Navigation
       </div>
 
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+      {/* Nav items */}
+      <nav style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -48,65 +74,43 @@ export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => 
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.85rem',
-                padding: '0.85rem 1.05rem',
+                gap: '0.7rem',
+                padding: '0.72rem 0.85rem',
                 borderRadius: 'var(--radius-md)',
-                background: isActive
-                  ? 'linear-gradient(135deg, rgba(244, 162, 97, 0.2) 0%, rgba(224, 122, 95, 0.1) 100%)'
-                  : 'transparent',
-                color: isActive ? 'var(--sand-500)' : 'var(--text-muted)',
-                border: isActive ? '1px solid rgba(244, 162, 97, 0.4)' : '1px solid transparent',
-                fontWeight: isActive ? 700 : 500,
-                fontSize: '0.92rem',
+                background: isActive ? 'var(--charcoal)' : item.highlight ? 'rgba(37, 99, 235, 0.08)' : 'transparent',
+                color: isActive ? 'var(--white)' : item.highlight ? '#2563eb' : 'var(--text-muted)',
+                border: 'none',
+                fontWeight: isActive || item.highlight ? 700 : 500,
+                fontSize: '0.88rem',
                 fontFamily: 'var(--font-sans)',
                 cursor: 'pointer',
                 textAlign: 'left',
-                transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
-                position: 'relative',
+                transition: 'all 0.2s ease',
               }}
             >
-              <Icon size={19} color={isActive ? '#F4A261' : '#94A3B8'} />
+              <Icon size={17} />
               <span style={{ flex: 1 }}>{item.label}</span>
 
               {item.badge !== undefined && item.badge > 0 && (
                 <span
                   style={{
-                    background: 'linear-gradient(135deg, #A82D38 0%, #D93848 100%)',
-                    color: '#FFFFFF',
-                    fontSize: '0.72rem',
+                    background: isActive ? 'var(--red)' : 'var(--charcoal)',
+                    color: 'var(--white)',
+                    fontSize: '11px',
                     fontWeight: 700,
-                    padding: '0.15rem 0.55rem',
-                    borderRadius: '20px',
+                    padding: '1px 7px',
+                    borderRadius: 'var(--radius-pill)',
+                    minWidth: '20px',
+                    textAlign: 'center',
                   }}
                 >
                   {item.badge}
                 </span>
               )}
-
-              {isActive && (
-                <ChevronRight size={16} color="var(--sand-500)" style={{ opacity: 0.9 }} />
-              )}
             </button>
           );
         })}
       </nav>
-
-      <div
-        style={{
-          marginTop: 'auto',
-          padding: '1.25rem',
-          borderRadius: 'var(--radius-md)',
-          background: 'rgba(244, 162, 97, 0.06)',
-          border: '1px solid rgba(244, 162, 97, 0.2)',
-        }}
-      >
-        <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--sand-500)', marginBottom: '0.3rem', fontFamily: 'var(--font-heading)' }}>
-          Fabric Engine Active
-        </div>
-        <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', lineHeight: '1.45', fontFamily: 'var(--font-sans)' }}>
-          Priority-score matching rule set loaded from database.
-        </div>
-      </div>
     </aside>
   );
 };

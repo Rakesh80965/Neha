@@ -1,26 +1,52 @@
 import React from 'react';
-import { Search, Heart, Grid, UploadCloud } from 'lucide-react';
+import { Search, Heart, Grid, UploadCloud, PlusCircle, FileText } from 'lucide-react';
 
 export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => {
   const navItems = [
-    { id: 'search',   label: 'Smart Search',  icon: Search },
-    { id: 'wishlist', label: 'Wishlists',      icon: Heart,       badge: wishlistBadgeCount },
-    { id: 'data',     label: 'All Samples',    icon: Grid },
-    { id: 'upload',   label: 'Upload Sheet',   icon: UploadCloud },
+    { id: 'enquiry',  label: 'Enquiry Registration', icon: FileText, highlight: true },
+    { id: 'search',   label: 'Smart Search',         icon: Search },
+    { id: 'wishlist', label: 'Wishlists',             icon: Heart,       badge: wishlistBadgeCount },
+    { id: 'data',     label: 'All Samples',           icon: Grid },
+    { id: 'upload',   label: 'Upload Sheet',          icon: UploadCloud },
   ];
 
   return (
     <aside
       style={{
-        width: '220px',
+        width: '230px',
         background: 'var(--cream)',
         borderRight: '1px solid var(--border)',
-        padding: '2rem 1rem 1.5rem',
+        padding: '1.5rem 1rem 1.5rem',
         display: 'flex',
         flexDirection: 'column',
         flexShrink: 0,
       }}
     >
+      {/* Primary Action Button */}
+      <button
+        onClick={() => setActiveTab('enquiry')}
+        style={{
+          width: '100%',
+          padding: '0.75rem 1rem',
+          borderRadius: 'var(--radius-md)',
+          background: 'linear-gradient(135deg, #1e3a8a, #2563eb)',
+          color: '#ffffff',
+          fontWeight: 700,
+          fontSize: '0.86rem',
+          border: 'none',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.6rem',
+          marginBottom: '1.5rem',
+          boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
+          transition: 'transform 0.2s',
+        }}
+      >
+        <PlusCircle size={18} />
+        <span>+ Enquiry Registration</span>
+      </button>
+
       {/* Section label */}
       <div
         style={{
@@ -29,14 +55,14 @@ export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => 
           textTransform: 'uppercase',
           letterSpacing: '0.14em',
           color: 'var(--text-dim)',
-          padding: '0 0.6rem 1rem',
+          padding: '0 0.6rem 0.6rem',
         }}
       >
         Navigation
       </div>
 
       {/* Nav items */}
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+      <nav style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -51,29 +77,15 @@ export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => 
                 gap: '0.7rem',
                 padding: '0.72rem 0.85rem',
                 borderRadius: 'var(--radius-md)',
-                background: isActive ? 'var(--charcoal)' : 'transparent',
-                color: isActive ? 'var(--white)' : 'var(--text-muted)',
+                background: isActive ? 'var(--charcoal)' : item.highlight ? 'rgba(37, 99, 235, 0.08)' : 'transparent',
+                color: isActive ? 'var(--white)' : item.highlight ? '#2563eb' : 'var(--text-muted)',
                 border: 'none',
-                fontWeight: isActive ? 700 : 500,
+                fontWeight: isActive || item.highlight ? 700 : 500,
                 fontSize: '0.88rem',
                 fontFamily: 'var(--font-sans)',
-                letterSpacing: isActive ? '-0.02em' : 'normal',
                 cursor: 'pointer',
                 textAlign: 'left',
                 transition: 'all 0.2s ease',
-                position: 'relative',
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.background = 'rgba(14,14,14,0.06)';
-                  e.currentTarget.style.color = 'var(--charcoal)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.color = 'var(--text-muted)';
-                }
               }}
             >
               <Icon size={17} />
@@ -99,27 +111,6 @@ export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => 
           );
         })}
       </nav>
-
-      {/* Footer status */}
-      <div
-        style={{
-          marginTop: 'auto',
-          padding: '1rem',
-          borderRadius: 'var(--radius-md)',
-          border: '1.5px solid var(--border)',
-          background: 'var(--bg-surface)',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-          <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#22C55E' }} />
-          <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            Engine Active
-          </div>
-        </div>
-        <div style={{ fontSize: '11.5px', color: 'var(--text-muted)', lineHeight: '1.5' }}>
-          Priority-score matching loaded.
-        </div>
-      </div>
     </aside>
   );
 };
