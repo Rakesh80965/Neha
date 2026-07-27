@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Heart, Check, ImageOff, Layers } from 'lucide-react';
+import { X, Heart, Check, ImageOff, Layers, FileText } from 'lucide-react';
 import { getApiUrl } from '../config';
 
 const FABRIC_COLORS = [
@@ -234,6 +234,51 @@ export const SampleModal = ({ sample, groups = [], onClose, onAddToWishlist }) =
                 ))}
               </div>
             </div>
+
+            {/* Attached Technical Reports & Documents */}
+            {(sample.sample_no === 1026 || sample.documents) && (
+              <div style={{ marginBottom: '1.25rem' }}>
+                <div style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-dim)', marginBottom: '0.55rem' }}>
+                  Attached Technical Reports & Documents
+                </div>
+                <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
+                  {(sample.documents || [{ name: 'Test Report.pdf', url: '/test_report_1026.html' }]).map((doc, idx) => {
+                    const docName = typeof doc === 'string' ? doc : doc.name;
+                    const docUrl = typeof doc === 'object' && doc.url ? doc.url : '/test_report_1026.html';
+
+                    return (
+                      <a
+                        key={idx}
+                        href={docUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          padding: '0.55rem 0.95rem',
+                          background: '#fef2f2',
+                          border: '1.5px solid #fecaca',
+                          borderRadius: '10px',
+                          color: '#dc2626',
+                          fontSize: '0.85rem',
+                          fontWeight: 700,
+                          textDecoration: 'none',
+                          cursor: 'pointer',
+                          transition: 'all 0.18s ease',
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = '#dc2626'; e.currentTarget.style.color = '#ffffff'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = '#fef2f2'; e.currentTarget.style.color = '#dc2626'; }}
+                      >
+                        <FileText size={16} />
+                        <span>{docName}</span>
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Add to Wishlist Section */}

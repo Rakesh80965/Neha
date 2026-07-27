@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, ImageOff, Sparkles } from 'lucide-react';
+import { Eye, ImageOff, Sparkles, FileText } from 'lucide-react';
 import { getApiUrl } from '../config';
 
 const FABRIC_COLORS = [
@@ -145,13 +145,42 @@ export const SampleCard = ({ sample, onOpenModal, onRemoveFromGroup, rankInfo })
 
       {/* Card Details */}
       <div style={{ padding: '1.1rem 1.15rem', display: 'flex', flexDirection: 'column', flex: 1, gap: '0.75rem' }}>
-        <div>
-          <div style={{ fontSize: '1.15rem', fontWeight: 900, color: 'var(--charcoal)', letterSpacing: '-0.04em', lineHeight: 1 }}>
-            #{sample.sample_no}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontSize: '1.15rem', fontWeight: 900, color: 'var(--charcoal)', letterSpacing: '-0.04em', lineHeight: 1 }}>
+              #{sample.sample_no}
+            </div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 500, marginTop: '3px', letterSpacing: '-0.01em' }}>
+              {sample.article || 'Standard Article'}
+            </div>
           </div>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 500, marginTop: '3px', letterSpacing: '-0.01em' }}>
-            {sample.article || 'Standard Article'}
-          </div>
+
+          {(sample.sample_no === 1026 || sample.documents) && (
+            <a
+              href="/test_report_1026.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+                padding: '0.25rem 0.55rem',
+                background: '#fef2f2',
+                border: '1px solid #fecaca',
+                borderRadius: '6px',
+                color: '#dc2626',
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                textDecoration: 'none',
+                cursor: 'pointer',
+              }}
+              title="Click to view Test Report"
+            >
+              <FileText size={12} />
+              <span>Test Report.pdf</span>
+            </a>
+          )}
         </div>
 
         {/* Spec Grid */}

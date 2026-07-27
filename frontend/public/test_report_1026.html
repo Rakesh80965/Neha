@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Report - Sample #1026</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f6f8;
+      color: #111;
+    }
+    .report-card {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 25px;
+      border: 1.5px solid #000;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .header-table, .data-table, .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+    .header-table td, .header-table th,
+    .data-table td, .data-table th,
+    .results-table td, .results-table th {
+      border: 1px solid #000;
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+    .title-row {
+      text-align: center;
+      background-color: #ffffff;
+    }
+    .title-row h2 {
+      margin: 2px 0;
+      font-size: 20px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .title-row p {
+      margin: 2px 0;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .report-banner {
+      background-color: #ffffff;
+      font-weight: bold;
+      text-align: center;
+      font-size: 13px;
+      padding: 5px;
+      border: 1px solid #000;
+      margin-bottom: -1px;
+    }
+    .banner-grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pass-badge {
+      background-color: #22c55e;
+      color: #fff;
+      padding: 3px 15px;
+      font-weight: bold;
+      border-radius: 3px;
+    }
+    .label-cell {
+      font-weight: bold;
+      background-color: #f8fafc;
+      width: 18%;
+    }
+    .val-cell {
+      width: 32%;
+    }
+    .section-header {
+      background-color: #e2e8f0;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .font-bold { font-weight: bold; }
+    .print-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #0e0e0e;
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    @media print {
+      .print-btn { display: none; }
+      body { background: #fff; padding: 0; }
+      .report-card { border: 1px solid #000; boxShadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+
+  <div class="report-card">
+    <!-- LOGO & TITLE HEADER -->
+    <table class="header-table">
+      <tr>
+        <td style="width: 20%; text-align: center; vertical-align: middle;">
+          <div style="font-weight: 900; font-size: 18px; color: #dc2626;">NSL</div>
+          <div style="font-size: 9px; font-weight: bold; text-transform: uppercase;">TEXTILES</div>
+          <div style="font-size: 7px; color: #555;">Cotton to Clothing</div>
+        </td>
+        <td class="title-row" style="width: 80%;">
+          <h2>NSL TEXTILES LTD</h2>
+          <p>KUNCHALAVRIPALEM CHANDOLE (PO) GUNTUR (DIST) ANDHRA PRADESH</p>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px; border-top: 1px solid #000; padding-top: 5px;">
+            <span style="font-weight: bold; font-size: 13px; margin-left: 10px;">WOVEN FABRIC TEST REPORT</span>
+            <span>
+              <span style="background: #e2e8f0; padding: 2px 8px; font-weight: bold; font-size: 11px;">REPORT</span>
+              <span class="pass-badge" style="margin-right: 10px;">PASS</span>
+            </span>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- METADATA GRID -->
+    <table class="data-table">
+      <tr>
+        <td class="label-cell">TEST REPORT NO</td>
+        <td class="val-cell font-bold">12216</td>
+        <td class="label-cell">LOG IN DATE</td>
+        <td class="val-cell">26.06.2026</td>
+      </tr>
+      <tr>
+        <td class="label-cell">SALES/ORDER NO</td>
+        <td class="val-cell">30129808/2</td>
+        <td class="label-cell">LOG OUT DATE</td>
+        <td class="val-cell">-</td>
+      </tr>
+      <tr>
+        <td class="label-cell">CUSTOMER NAME</td>
+        <td class="val-cell font-bold">BENETTON INDIA PRIVATE LIMITED</td>
+        <td class="label-cell">COLOUR NAME</td>
+        <td class="val-cell">26A5CH305OXFI-904 BLUE</td>
+      </tr>
+      <tr>
+        <td class="label-cell">NSL REF #</td>
+        <td class="val-cell">VF812PA508710033</td>
+        <td class="label-cell">PO NO #</td>
+        <td class="val-cell">141233469</td>
+      </tr>
+      <tr>
+        <td class="label-cell">SAMPLE DESCRIPTION</td>
+        <td class="val-cell font-bold">WOVEN FABRIC (Sample #1026)</td>
+        <td class="label-cell">WASH/FINISH</td>
+        <td class="val-cell">COTTON SOFT FINISH</td>
+      </tr>
+      <tr>
+        <td class="label-cell">STAGE OF SAMPLE</td>
+        <td class="val-cell">FINISHING</td>
+        <td class="label-cell">END PRODUCT</td>
+        <td class="val-cell">-</td>
+      </tr>
+      <tr>
+        <td class="label-cell">COLOUR CODE/NAME</td>
+        <td class="val-cell">26A5CH305OXFI-904 BLUE</td>
+        <td class="label-cell">PROTOCOL FOLLOWED</td>
+        <td class="val-cell">BENETTON</td>
+      </tr>
+      <tr>
+        <td class="label-cell">QUALITY</td>
+        <td class="val-cell">20SLx21LYOC-LEA/64x54/58"/PLAIN/CSF</td>
+        <td class="label-cell">FINISH WIDTH</td>
+        <td class="val-cell">CMS: 148.5 | INCH: 58.5</td>
+      </tr>
+      <tr>
+        <td class="label-cell">FIBER CONTENT</td>
+        <td class="val-cell">50% COTTON, 40% LYOCEL, 10% INEN</td>
+        <td class="label-cell">CUTTABLE WIDTH</td>
+        <td class="val-cell">CMS: 146.0 | INCH: 57.5</td>
+      </tr>
+      <tr>
+        <td class="label-cell">WASH CARE</td>
+        <td colspan="3" class="val-cell font-bold">MACHINE WASH 40 DEGREE, TUMBLE DRY</td>
+      </tr>
+    </table>
+
+    <!-- PHYSICAL TEST RESULTS -->
+    <table class="results-table">
+      <thead>
+        <tr style="background-color: #f1f5f9;">
+          <th style="width: 22%;">TEST NAME</th>
+          <th style="width: 18%;">TEST METHOD</th>
+          <th style="width: 15%;">PARAMETER</th>
+          <th style="width: 15%;">TEST RESULTS</th>
+          <th style="width: 15%;">REQUIREMENTS</th>
+          <th style="width: 15%;">CONCLUSION</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="2" class="font-bold">THREAD COUNT</td>
+          <td rowspan="2" class="text-center">ISO 7211-2</td>
+          <td class="text-center">EPI</td>
+          <td class="text-center font-bold">63</td>
+          <td rowspan="2" class="text-center">+/-5%</td>
+          <td rowspan="2" class="text-center font-bold">SEE RESULTS</td>
+        </tr>
+        <tr>
+          <td class="text-center">PPI</td>
+          <td class="text-center font-bold">54</td>
+        </tr>
+        <tr>
+          <td class="font-bold">FABRIC WEIGHT</td>
+          <td class="text-center">ISO 3801</td>
+          <td class="text-center">GSM</td>
+          <td class="text-center font-bold">144</td>
+          <td class="text-center">+/-5%</td>
+          <td class="text-center font-bold">SEE RESULTS</td>
+        </tr>
+        <tr>
+          <td rowspan="2" class="font-bold">DIMENSIONAL STABILITY TO WASHING</td>
+          <td rowspan="2" class="text-center">ISO 6330</td>
+          <td class="text-center">WARP</td>
+          <td class="text-center font-bold">-2.0</td>
+          <td rowspan="2" class="text-center">+1 TO -3%</td>
+          <td rowspan="2" class="text-center font-bold" style="color: #16a34a;">PASS</td>
+        </tr>
+        <tr>
+          <td class="text-center">WEFT</td>
+          <td class="text-center font-bold">-3.0</td>
+        </tr>
+        <tr>
+          <td rowspan="2" class="font-bold">TEAR STRENGTH</td>
+          <td rowspan="2" class="text-center">ISO 13937-1</td>
+          <td class="text-center">WARP</td>
+          <td class="text-center font-bold">2.13 KGF</td>
+          <td rowspan="2" class="text-center">1.0 KGF</td>
+          <td rowspan="2" class="text-center font-bold" style="color: #16a34a;">PASS</td>
+        </tr>
+        <tr>
+          <td class="text-center">WEFT</td>
+          <td class="text-center font-bold">3.86 KGF</td>
+        </tr>
+        <tr>
+          <td class="font-bold">BOWING</td>
+          <td class="text-center">ASTM D 3882</td>
+          <td class="text-center">-</td>
+          <td class="text-center font-bold">1.2</td>
+          <td class="text-center">-</td>
+          <td class="text-center font-bold">SEE RESULTS</td>
+        </tr>
+        <tr>
+          <td class="font-bold">SKEW</td>
+          <td class="text-center">ASTM D 3882</td>
+          <td class="text-center">-</td>
+          <td class="text-center font-bold">2.1</td>
+          <td class="text-center">-</td>
+          <td class="text-center font-bold">SEE RESULTS</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- COLOUR FASTNESS -->
+    <table class="results-table">
+      <thead>
+        <tr class="section-header">
+          <td colspan="6">COLOUR FASTNESS</td>
+        </tr>
+        <tr style="background-color: #f1f5f9;">
+          <th style="width: 20%;">TEST METHOD</th>
+          <th style="width: 20%;">CF TO WASHING (ISO 105 C06)</th>
+          <th style="width: 20%;">CF TO PERSPIRATION (ISO 105 E04)</th>
+          <th style="width: 20%;">CF TO WATER (ISO 105 E01)</th>
+          <th style="width: 20%;">REQUIREMENT / REMARKS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="font-bold">COLOUR CHANGE</td>
+          <td class="text-center">4.0</td>
+          <td class="text-center">4.0 (ACID) / 4.0 (ALKALI)</td>
+          <td class="text-center">4.0</td>
+          <td rowspan="8" class="text-center font-bold" style="color: #16a34a; font-size: 16px;">PASS</td>
+        </tr>
+        <tr>
+          <td class="font-bold">SELF STAINING</td>
+          <td class="text-center">4-5</td>
+          <td class="text-center">4-5</td>
+          <td class="text-center">4-5</td>
+        </tr>
+        <tr>
+          <td class="font-bold">COTTON</td>
+          <td class="text-center">4.0</td>
+          <td class="text-center">4.0</td>
+          <td class="text-center">4.0</td>
+        </tr>
+        <tr>
+          <td class="font-bold">NYLON</td>
+          <td class="text-center">4.0</td>
+          <td class="text-center">4.0</td>
+          <td class="text-center">4.0</td>
+        </tr>
+        <tr>
+          <td class="font-bold">POLYESTER</td>
+          <td class="text-center">4.0</td>
+          <td class="text-center">4.0</td>
+          <td class="text-center">4.0</td>
+        </tr>
+        <tr>
+          <td class="font-bold">ACRYLIC</td>
+          <td class="text-center">4.0</td>
+          <td class="text-center">4.0</td>
+          <td class="text-center">4.0</td>
+        </tr>
+        <tr>
+          <td class="font-bold">WOOL</td>
+          <td class="text-center">4.0</td>
+          <td class="text-center">4.0</td>
+          <td class="text-center">4.0</td>
+        </tr>
+        <tr>
+          <td class="font-bold">RUBBING (ISO 105 X12)</td>
+          <td class="text-center">DRY: 4.5</td>
+          <td class="text-center">WET: 4.0</td>
+          <td class="text-center">REQ: 4 / 3-4</td>
+        </tr>
+        <tr>
+          <td class="font-bold">PH VALUE (ISO 3071)</td>
+          <td colspan="3" class="text-center font-bold">6.6 (REQ: 4.0 - 7.5)</td>
+          <td class="text-center font-bold" style="color: #16a34a;">PASS</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- FOOTER SIGNATURES -->
+    <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-top: 15px; border-top: 1px solid #cbd5e1;">
+      <div style="text-align: center;">
+        <div style="font-weight: bold; text-transform: uppercase; font-size: 11px;">PREPARED BY</div>
+        <div style="margin-top: 25px; border-top: 1px solid #000; width: 140px; margin-left: auto; margin-right: auto; padding-top: 3px; font-size: 10px; color: #555;">QA LAB TECHNICIAN</div>
+      </div>
+      <div style="text-align: center;">
+        <div style="font-weight: bold; text-transform: uppercase; font-size: 11px;">APPROVED BY</div>
+        <div style="margin-top: 25px; border-top: 1px solid #000; width: 140px; margin-left: auto; margin-right: auto; padding-top: 3px; font-size: 10px; color: #555;">LAB INCHARGE</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
