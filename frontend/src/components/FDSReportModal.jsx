@@ -43,14 +43,23 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
   const [parameters, setParameters] = useState(DEFAULT_PARAMETERS);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
-  const handleSharePDF = () => {
-    generateFDSPDF(
-      'fds-report-printable-area',
-      `NSL_FDS_${fdsNo}.pdf`,
-      `NSL Feasibility Report - ${fdsNo}`,
-      `NSL Feasibility & Buyer Order Report (${fdsNo}) for ${endBuyer}.`
-    );
+  const handleSharePDF = async () => {
+    if (isGeneratingPdf) return;
+    setIsGeneratingPdf(true);
+    try {
+      await generateFDSPDF(
+        'fds-report-printable-area',
+        `NSL_FDS_${fdsNo}.pdf`,
+        `NSL Feasibility Report - ${fdsNo}`,
+        `NSL Feasibility & Buyer Order Report (${fdsNo}) for ${endBuyer}.`
+      );
+    } catch (err) {
+      alert('Could not generate PDF: ' + err.message);
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   };
 
   const handleParamChange = (index, field, value) => {
@@ -187,8 +196,9 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
           </div>
 
           <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button onClick={handleSharePDF} className="btn-primary-red" style={{ padding: '0.45rem 1rem', fontSize: '0.8rem', gap: '0.4rem' }}>
-              <FileDown size={15} /> Share PDF Document
+            <button onClick={handleSharePDF} disabled={isGeneratingPdf} className="btn-primary-red" style={{ padding: '0.45rem 1rem', fontSize: '0.8rem', gap: '0.4rem', opacity: isGeneratingPdf ? 0.7 : 1 }}>
+              <FileDown size={15} />
+              <span>{isGeneratingPdf ? 'Generating PDF…' : 'Share PDF Document'}</span>
             </button>
             <button onClick={() => window.print()} className="btn-secondary" style={{ padding: '0.45rem 0.85rem', fontSize: '0.78rem' }}>
               <Printer size={14} /> Print
@@ -228,13 +238,16 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
               <button
                 onClick={handleSharePDF}
+                disabled={isGeneratingPdf}
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                   padding: '0.45rem 0.85rem', background: '#dc2626', color: '#fff',
-                  borderRadius: '8px', border: 'none', fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer'
+                  borderRadius: '8px', border: 'none', fontWeight: 700, fontSize: '0.8rem', cursor: isGeneratingPdf ? 'wait' : 'pointer',
+                  opacity: isGeneratingPdf ? 0.7 : 1
                 }}
               >
-                <FileDown size={14} /> Share PDF
+                <FileDown size={14} />
+                <span>{isGeneratingPdf ? 'Generating…' : 'Share PDF'}</span>
               </button>
               <button
                 onClick={handleShareWhatsApp}
