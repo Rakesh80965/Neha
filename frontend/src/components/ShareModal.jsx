@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, FileDown, Check, Copy, Printer } from 'lucide-react';
+import { X, FileDown } from 'lucide-react';
 import { generateFDSPDF } from '../utils/pdfGenerator';
 
 export const ShareModal = ({ isOpen, onClose, fdsNo, buyerName, enquiryId, samples = [], printableId = 'fds-report-printable-area' }) => {
@@ -84,15 +84,15 @@ export const ShareModal = ({ isOpen, onClose, fdsNo, buyerName, enquiryId, sampl
           Share {displayId}
         </h3>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '1.25rem' }}>
           {/* Download PDF Option */}
           <button
             onClick={handleDownloadPDF}
             disabled={downloading}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '0.85rem 1.1rem', background: '#fef2f2', border: '1.5px solid #fecaca',
-              borderRadius: '12px', color: '#dc2626', fontWeight: 800, fontSize: '0.9rem',
+              padding: '0.9rem 1.1rem', background: '#fef2f2', border: '1.5px solid #fecaca',
+              borderRadius: '12px', color: '#dc2626', fontWeight: 800, fontSize: '0.92rem',
               cursor: downloading ? 'wait' : 'pointer', transition: 'all 0.2s ease',
             }}
           >
@@ -102,73 +102,9 @@ export const ShareModal = ({ isOpen, onClose, fdsNo, buyerName, enquiryId, sampl
             </div>
             <span style={{ fontSize: '0.72rem', background: '#dc2626', color: '#fff', padding: '2px 8px', borderRadius: '6px' }}>PDF</span>
           </button>
-
-          {/* WhatsApp Option */}
-          <button
-            onClick={handleWhatsApp}
-            style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '0.85rem 1.1rem', background: '#f0fdf4', border: '1.5px solid #bbf7d0',
-              borderRadius: '12px', color: '#16a34a', fontWeight: 800, fontSize: '0.9rem',
-              cursor: 'pointer', transition: 'all 0.2s ease',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <span style={{ fontSize: '1.2rem' }}>💬</span>
-              <span>Share via WhatsApp</span>
-            </div>
-          </button>
-
-          {/* Email Option */}
-          <button
-            onClick={handleEmail}
-            style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '0.85rem 1.1rem', background: '#eff6ff', border: '1.5px solid #bfdbfe',
-              borderRadius: '12px', color: '#2563eb', fontWeight: 800, fontSize: '0.9rem',
-              cursor: 'pointer', transition: 'all 0.2s ease',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <span style={{ fontSize: '1.2rem' }}>✉️</span>
-              <span>Share via Email</span>
-            </div>
-          </button>
-
-          {/* Copy Option */}
-          <button
-            onClick={handleCopy}
-            style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '0.85rem 1.1rem', background: '#f8fafc', border: '1.5px solid #cbd5e1',
-              borderRadius: '12px', color: '#0f172a', fontWeight: 800, fontSize: '0.9rem',
-              cursor: 'pointer', transition: 'all 0.2s ease',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              {copied ? <Check size={18} color="#16a34a" /> : <Copy size={18} />}
-              <span>{copied ? 'Copied to Clipboard!' : 'Copy Summary & Details'}</span>
-            </div>
-          </button>
-
-          {/* Print Fallback */}
-          <button
-            onClick={() => window.print()}
-            style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '0.85rem 1.1rem', background: '#ffffff', border: '1.5px solid #e2e8f0',
-              borderRadius: '12px', color: '#64748b', fontWeight: 700, fontSize: '0.88rem',
-              cursor: 'pointer', transition: 'all 0.2s ease',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <Printer size={18} />
-              <span>Print / Save as PDF via Browser</span>
-            </div>
-          </button>
         </div>
 
-        <button onClick={onClose} className="btn-secondary" style={{ width: '100%' }}>
+        <button onClick={onClose} className="btn-secondary" style={{ width: '100%', padding: '0.75rem' }}>
           Done
         </button>
 
