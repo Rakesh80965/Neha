@@ -9,14 +9,12 @@ import {
   X,
   AlertCircle,
   CheckCircle,
-  File,
-  ChevronDown,
   Save,
-  ArrowLeft,
 } from 'lucide-react';
 import { getApiUrl } from '../config';
 
 const BRAND_OPTIONS = [
+  'Select Brand',
   'ZARA',
   'H&M',
   'Nike',
@@ -30,10 +28,11 @@ const BRAND_OPTIONS = [
   'Tommy Hilfiger',
   'Calvin Klein',
   'Marks & Spencer',
-  'Other',
+  'Other (Custom)',
 ];
 
 const COUNTRY_OPTIONS = [
+  'Select Country',
   'Spain',
   'India',
   'United States',
@@ -73,46 +72,36 @@ const STATUSES = ['New', 'In Progress', 'Pending', 'Completed', 'On Hold'];
 const END_USES = ['Shirts', 'Pants', 'Dresses', 'Outerwear', 'Suits', 'Activewear', 'Other'];
 
 export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
-  // Section 1: Buyer Information
-  const [buyerName, setBuyerName] = useState('ZARA');
-  const [brandName, setBrandName] = useState('ZARA');
-  const [company, setCompany] = useState('Inditex');
-  const [country, setCountry] = useState('Spain');
-  const [contactPerson, setContactPerson] = useState('Mr. David Garcia');
-  const [email, setEmail] = useState('david.garcia@zara.com');
-  const [phoneNumber, setPhoneNumber] = useState('+34 612 345 678');
-  const [buyerId] = useState('B-00045');
+  // Section 1: Buyer Information (Empty by default)
+  const [buyerName, setBuyerName] = useState('');
+  const [brandName, setBrandName] = useState('Select Brand');
+  const [customBrand, setCustomBrand] = useState('');
+  const [company, setCompany] = useState('');
+  const [country, setCountry] = useState('Select Country');
+  const [contactPerson, setContactPerson] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [buyerId] = useState(() => 'B-' + String(Math.floor(10000 + Math.random() * 90000)));
 
   // Section 2: Enquiry Information
   const [enquiryId] = useState(() => 'ENQ-2025-' + String(Math.floor(10000 + Math.random() * 90000)).padStart(5, '0'));
-  const [dateReceived, setDateReceived] = useState('2025-07-22');
-  const [dueDate, setDueDate] = useState('2025-08-05');
+  const [dateReceived, setDateReceived] = useState(() => new Date().toISOString().split('T')[0]);
+  const [dueDate, setDueDate] = useState('');
   const [priority, setPriority] = useState('High');
   const [requirementType, setRequirementType] = useState('Development');
   const [season, setSeason] = useState('AW 25');
-  const [quantity, setQuantity] = useState('5000 Mtrs');
+  const [quantity, setQuantity] = useState('');
   const [status, setStatus] = useState('New');
   const [endUse, setEndUse] = useState('Shirts');
 
-  // Section 3: Requirement Summary
-  const [summary, setSummary] = useState(
-    'Buyer requires a lightweight cotton fabric with premium appearance, soft hand feel, yarn dyed stripe, sustainable material, suitable for shirts. Looking for fabrics with good drape and breathability.'
-  );
+  // Section 3: Requirement Summary (Empty by default)
+  const [summary, setSummary] = useState('');
 
-  // Section 4: Documents
-  const [documents, setDocuments] = useState([
-    { id: '1', name: 'Buyer_Requirement.pdf', size: '2.4 MB', type: 'pdf' },
-    { id: '2', name: 'Tech_Pack_ZARA_AW25.pdf', size: '1.8 MB', type: 'pdf' },
-    { id: '3', name: 'Reference_Images.zip', size: '6.7 MB', type: 'zip' },
-    { id: '4', name: 'Specifications_Sheet.pdf', size: '1.2 MB', type: 'pdf' },
-  ]);
+  // Section 4: Documents (Empty by default)
+  const [documents, setDocuments] = useState([]);
 
-  // Section 5: Reference Images
-  const [referenceImages, setReferenceImages] = useState([
-    'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=300&q=80',
-    'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=300&q=80',
-    'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=300&q=80',
-  ]);
+  // Section 5: Reference Images (Empty by default)
+  const [referenceImages, setReferenceImages] = useState([]);
 
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
@@ -154,16 +143,19 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
     setErrorMsg('');
     setSuccessMsg('');
 
+    const effectiveBrand = brandName === 'Other (Custom)' ? customBrand : brandName;
+
     if (!buyerName.trim()) { setErrorMsg('Buyer Name is required'); return; }
-    if (!brandName.trim()) { setErrorMsg('Brand Name is required'); return; }
-    if (!country) { setErrorMsg('Country is required'); return; }
+    if (!effectiveBrand.trim() || effectiveBrand === 'Select Brand') { setErrorMsg('Brand Name is required'); return; }
+    if (!country || country === 'Select Country') { setErrorMsg('Country is required'); return; }
+    if (!email.trim()) { setErrorMsg('Email is required'); return; }
     if (!summary.trim()) { setErrorMsg('Requirement Summary is required'); return; }
 
     setSaving(true);
     try {
       const payload = {
-        buyer_name: buyerName,
-        brand_name: brandName,
+        buyer_name: buyerName.trim(),
+        brand_name: effectiveBrand,
         company,
         country,
         contact_person: contactPerson,
@@ -194,10 +186,10 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || 'Failed to save enquiry');
 
-      setSuccessMsg('Buyer enquiry registered successfully!');
+      setSuccessMsg('Buyer enquiry registered & Wishlist Group created successfully!');
       setTimeout(() => {
         if (onSavedSuccess) onSavedSuccess(data);
-      }, 1200);
+      }, 800);
     } catch (err) {
       setErrorMsg(err.message || 'Could not save enquiry');
     } finally {
@@ -392,7 +384,7 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
                   required
                   value={buyerName}
                   onChange={(e) => setBuyerName(e.target.value)}
-                  placeholder="ZARA"
+                  placeholder="e.g. ZARA"
                   style={{
                     width: '100%',
                     padding: '0.65rem 0.85rem',
@@ -428,6 +420,24 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
                     <option key={b} value={b}>{b}</option>
                   ))}
                 </select>
+                {brandName === 'Other (Custom)' && (
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter custom brand"
+                    value={customBrand}
+                    onChange={(e) => setCustomBrand(e.target.value)}
+                    style={{
+                      width: '100%',
+                      marginTop: '0.5rem',
+                      padding: '0.6rem 0.85rem',
+                      borderRadius: '8px',
+                      border: '1.5px solid #cbd5e1',
+                      fontSize: '0.88rem',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                )}
               </div>
 
               {/* Company */}
@@ -439,7 +449,7 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
                   type="text"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
-                  placeholder="Inditex"
+                  placeholder="e.g. Inditex"
                   style={{
                     width: '100%',
                     padding: '0.65rem 0.85rem',
@@ -486,7 +496,7 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
                   type="text"
                   value={contactPerson}
                   onChange={(e) => setContactPerson(e.target.value)}
-                  placeholder="Mr. David Garcia"
+                  placeholder="e.g. Mr. David Garcia"
                   style={{
                     width: '100%',
                     padding: '0.65rem 0.85rem',
@@ -509,7 +519,7 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="david.garcia@zara.com"
+                  placeholder="e.g. david.garcia@zara.com"
                   style={{
                     width: '100%',
                     padding: '0.65rem 0.85rem',
@@ -531,7 +541,7 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
                   type="text"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  placeholder="+34 612 345 678"
+                  placeholder="e.g. +34 612 345 678"
                   style={{
                     width: '100%',
                     padding: '0.65rem 0.85rem',
@@ -770,7 +780,7 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
                   type="text"
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
-                  placeholder="5000 Mtrs"
+                  placeholder="e.g. 5000 Mtrs"
                   style={{
                     width: '100%',
                     padding: '0.65rem 0.85rem',
@@ -1002,56 +1012,58 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
             </label>
 
             {/* Uploaded Documents List */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-              {documents.map((doc) => (
-                <div
-                  key={doc.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '0.55rem 0.8rem',
-                    borderRadius: '8px',
-                    background: '#f8fafc',
-                    border: '1px solid #f1f5f9',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', overflow: 'hidden' }}>
-                    <div
-                      style={{
-                        padding: '4px 6px',
-                        borderRadius: '4px',
-                        background: '#fef2f2',
-                        color: '#ef4444',
-                        fontSize: '9px',
-                        fontWeight: 800,
-                      }}
-                    >
-                      {doc.type.toUpperCase()}
-                    </div>
-                    <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#334155', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                        {doc.name}
-                      </div>
-                      <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>{doc.size}</div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => removeDocument(doc.id)}
+            {documents.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                {documents.map((doc) => (
+                  <div
+                    key={doc.id}
                     style={{
-                      background: 'none',
-                      border: 'none',
-                      color: '#94a3b8',
-                      cursor: 'pointer',
-                      padding: '2px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '0.55rem 0.8rem',
+                      borderRadius: '8px',
+                      background: '#f8fafc',
+                      border: '1px solid #f1f5f9',
                     }}
                   >
-                    <X size={14} />
-                  </button>
-                </div>
-              ))}
-            </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', overflow: 'hidden' }}>
+                      <div
+                        style={{
+                          padding: '4px 6px',
+                          borderRadius: '4px',
+                          background: '#fef2f2',
+                          color: '#ef4444',
+                          fontSize: '9px',
+                          fontWeight: 800,
+                        }}
+                      >
+                        {doc.type.toUpperCase()}
+                      </div>
+                      <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#334155', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                          {doc.name}
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>{doc.size}</div>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => removeDocument(doc.id)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#94a3b8',
+                        cursor: 'pointer',
+                        padding: '2px',
+                      }}
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div style={{ marginTop: '0.85rem', fontSize: '0.72rem', color: '#94a3b8' }}>
               Max file size: 20MB each

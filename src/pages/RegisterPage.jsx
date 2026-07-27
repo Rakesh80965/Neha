@@ -3,6 +3,7 @@ import { ArrowRight, Lock, AlertCircle, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const BRAND_OPTIONS = [
+  'Select Brand',
   'ZARA',
   'H&M',
   'Nike',
@@ -20,6 +21,7 @@ const BRAND_OPTIONS = [
 ];
 
 const COUNTRY_OPTIONS = [
+  'Select Country',
   'Spain',
   'India',
   'United States',
@@ -45,14 +47,15 @@ export const RegisterPage = ({ onSwitchToLogin }) => {
   // Auto-generate a Buyer ID formatted as B-XXXXX
   const [buyerId] = useState(() => 'B-' + String(Math.floor(10000 + Math.random() * 90000)));
 
-  const [buyerName, setBuyerName] = useState('ZARA');
-  const [brandName, setBrandName] = useState('ZARA');
+  // All initial input states empty by default
+  const [buyerName, setBuyerName] = useState('');
+  const [brandName, setBrandName] = useState('Select Brand');
   const [customBrand, setCustomBrand] = useState('');
-  const [company, setCompany] = useState('Inditex');
-  const [country, setCountry] = useState('Spain');
-  const [contactPerson, setContactPerson] = useState('Mr. David Garcia');
-  const [email, setEmail] = useState('david.garcia@zara.com');
-  const [phoneNumber, setPhoneNumber] = useState('+34 612 345 678');
+  const [company, setCompany] = useState('');
+  const [country, setCountry] = useState('Select Country');
+  const [contactPerson, setContactPerson] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -66,8 +69,8 @@ export const RegisterPage = ({ onSwitchToLogin }) => {
     const effectiveBrand = brandName === 'Other (Custom)' ? customBrand : brandName;
 
     if (!buyerName.trim()) { setError('Buyer Name is required'); return; }
-    if (!effectiveBrand.trim()) { setError('Brand Name is required'); return; }
-    if (!country) { setError('Country selection is required'); return; }
+    if (!effectiveBrand.trim() || effectiveBrand === 'Select Brand') { setError('Brand Name is required'); return; }
+    if (!country || country === 'Select Country') { setError('Country selection is required'); return; }
     if (!email.trim()) { setError('Email is required'); return; }
     if (password !== confirm) { setError('Passwords do not match'); return; }
     if (password.length < 6) { setError('Password must be at least 6 characters'); return; }
@@ -75,10 +78,10 @@ export const RegisterPage = ({ onSwitchToLogin }) => {
     setSubmitting(true);
     try {
       await register({
-        email,
+        email: email.trim(),
         password,
         confirm,
-        buyerName,
+        buyerName: buyerName.trim(),
         brandName: effectiveBrand,
         company,
         country,
@@ -375,7 +378,7 @@ export const RegisterPage = ({ onSwitchToLogin }) => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="david.garcia@zara.com"
+                  placeholder="e.g. david.garcia@zara.com"
                   style={{
                     width: '100%',
                     padding: '0.7rem 0.9rem',
@@ -397,7 +400,7 @@ export const RegisterPage = ({ onSwitchToLogin }) => {
                   type="text"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  placeholder="+34 612 345 678"
+                  placeholder="e.g. +34 612 345 678"
                   style={{
                     width: '100%',
                     padding: '0.7rem 0.9rem',

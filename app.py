@@ -716,6 +716,14 @@ def register():
                     "phone_number": phone_number,
                     "buyer_id": buyer_id,
                 }
+                # Automatically create a Wishlist Group for this buyer
+                if buyer_name:
+                    try:
+                        existing = sb_select("wishlist_groups", filters={"user_id": f"eq.{user['id']}", "name": f"eq.{buyer_name}"})
+                        if not existing:
+                            sb_insert("wishlist_groups", {"user_id": user['id'], "name": buyer_name})
+                    except Exception:
+                        pass
                 user_data = {
                     "id": user["id"],
                     "email": session["username"],
