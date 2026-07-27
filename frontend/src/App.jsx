@@ -23,7 +23,14 @@ const MainApp = () => {
 
   const [activeModalSample, setActiveModalSample] = useState(null);
   const [wishlistData, setWishlistData] = useState(null);
+  const [createdEnquiries, setCreatedEnquiries] = useState([]);
   const [toast, setToast] = useState({ message: '', type: 'success' });
+
+  const handleFinalizeOrder = (newEnquiry) => {
+    setCreatedEnquiries((prev) => [newEnquiry, ...prev]);
+    setActiveTab('all-enquiries');
+    setToast({ message: `Order finalized & FDS Report generated for ${newEnquiry.buyer_name}!`, type: 'success' });
+  };
 
   const fetchWishlist = async () => {
     try {
@@ -101,7 +108,10 @@ const MainApp = () => {
 
           {activeTab === 'all-enquiries' && (
             <div style={{ padding: '2rem' }}>
-              <AllEnquiriesPage onOpenRegistration={() => setActiveTab('enquiry')} />
+              <AllEnquiriesPage
+                onOpenRegistration={() => setActiveTab('enquiry')}
+                createdEnquiries={createdEnquiries}
+              />
             </div>
           )}
 
@@ -114,6 +124,7 @@ const MainApp = () => {
               onOpenModal={(sample) => setActiveModalSample(sample)}
               wishlistData={wishlistData}
               refreshWishlist={fetchWishlist}
+              onFinalizeOrder={handleFinalizeOrder}
             />
           )}
 

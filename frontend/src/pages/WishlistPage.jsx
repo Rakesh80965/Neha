@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Trash2, FolderPlus, Bookmark, X } from 'lucide-react';
+import { Heart, Trash2, FolderPlus, Bookmark, X, FileCheck } from 'lucide-react';
 import { SampleCard } from '../components/SampleCard';
+import { FDSReportModal } from '../components/FDSReportModal';
 import { getApiUrl } from '../config';
 
-export const WishlistPage = ({ onOpenModal, wishlistData, refreshWishlist }) => {
+export const WishlistPage = ({ onOpenModal, wishlistData, refreshWishlist, onFinalizeOrder }) => {
   const [activeGroupId, setActiveGroupId] = useState(null);
   const [newGroupModal, setNewGroupModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
   const [creating, setCreating] = useState(false);
+  const [fdsModalOpen, setFdsModalOpen] = useState(false);
 
   const groups = wishlistData?.groups || [];
 
@@ -189,16 +191,67 @@ export const WishlistPage = ({ onOpenModal, wishlistData, refreshWishlist }) => 
           </p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(265px, 1fr))', gap: '1.25rem' }}>
-          {activeSamples.map((sample) => (
-            <SampleCard
-              key={sample.sample_no}
-              sample={sample}
-              onOpenModal={onOpenModal}
-              onRemoveFromGroup={handleRemoveSample}
-            />
-          ))}
-        </div>
+        <>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(265px, 1fr))', gap: '1.25rem' }}>
+            {activeSamples.map((sample) => (
+              <SampleCard
+                key={sample.sample_no}
+                sample={sample}
+                onOpenModal={onOpenModal}
+                onRemoveFromGroup={handleRemoveSample}
+              />
+            ))}
+          </div>
+
+          {/* Finalize Order & FDS Report Banner */}
+          <div
+            style={{
+              marginTop: '2rem',
+              padding: '1.5rem 2rem',
+              background: 'var(--white)',
+              border: '1.5px solid var(--border)',
+              borderRadius: 'var(--radius-xl)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '1rem',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
+            }}
+          >
+            <div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 900, color: 'var(--charcoal)', letterSpacing: '-0.03em' }}>
+                Finalize Collection for {activeGroup?.group_name || 'Buyer'}
+              </div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                Generate FDS Feasibility Report for all {activeSamples.length} selected fabric samples & submit to All Enquiries.
+              </div>
+            </div>
+
+            <button
+              onClick={() => setFdsModalOpen(true)}
+              className="btn-primary-red"
+              style={{ padding: '0.75rem 1.8rem', fontSize: '0.92rem', gap: '0.5rem' }}
+            >
+              <FileCheck size={18} />
+              <span>Finalize Order & FDS Report</span>
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* FDS Feasibility Report Modal */}
+      {fdsModalOpen && activeGroup && (
+        <FDSReportModal
+          group={activeGroup}
+          samples={activeSamples}
+          onClose={() => setFdsModalOpen(false)}
+          onFinalizeSuccess={(newEnquiry) => {
+            if (onFinalizeOrder) {
+              onFinalizeOrder(newEnquiry);
+            }
+          }}
+        />
       )}
 
       {/* New Group Modal */}

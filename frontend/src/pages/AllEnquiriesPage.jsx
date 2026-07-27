@@ -19,6 +19,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Filter,
+  Share2,
 } from 'lucide-react';
 import { getApiUrl } from '../config';
 import { OrderTracking } from '../components/ui/order-tracking';
@@ -146,7 +147,7 @@ const INITIAL_DEMO_ENQUIRIES = [
   },
 ];
 
-export const AllEnquiriesPage = ({ onOpenRegistration }) => {
+export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) => {
   const [enquiries, setEnquiries] = useState(INITIAL_DEMO_ENQUIRIES);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -162,22 +163,29 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
       if (res.ok) {
         const data = await res.json();
         if (data.enquiries && data.enquiries.length > 0) {
-          // Merge API enquiries with demo ones if not present
           const existingIds = new Set(INITIAL_DEMO_ENQUIRIES.map((e) => e.enquiry_id));
           const newApiEnquiries = data.enquiries.filter((e) => !existingIds.has(e.enquiry_id));
-          setEnquiries([...newApiEnquiries, ...INITIAL_DEMO_ENQUIRIES]);
+          setEnquiries([...createdEnquiries, ...newApiEnquiries, ...INITIAL_DEMO_ENQUIRIES]);
+          return;
         }
       }
     } catch (e) {
-      // Fallback to local demo list
+      // Fallback
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchEnquiries();
-  }, []);
+    if (createdEnquiries && createdEnquiries.length > 0) {
+      const createdIds = new Set(createdEnquiries.map((c) => c.enquiry_id));
+      const filteredExisting = INITIAL_DEMO_ENQUIRIES.filter((e) => !createdIds.has(e.enquiry_id));
+      setEnquiries([...createdEnquiries, ...filteredExisting]);
+      setLoading(false);
+    } else {
+      fetchEnquiries();
+    }
+  }, [createdEnquiries]);
 
   const handleUpdateStage = async (enquiryId, newStage, e) => {
     if (e) e.stopPropagation();
@@ -519,7 +527,57 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                     )}
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+                    {enq.fds_report && (
+                      <span
+                        style={{
+                          padding: '0.25rem 0.65rem',
+                          borderRadius: '6px',
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                          background: '#fef2f2',
+                          color: '#dc2626',
+                          border: '1px solid #fecaca',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.3rem',
+                        }}
+                      >
+                        <FileText size={12} />
+                        <span>FDS Report ({enq.fds_report.fdsNo})</span>
+                      </span>
+                    )}
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const shareText = `NSL Feasibility & Buyer Order\nBuyer: ${enq.buyer_name}\nEnquiry ID: ${enq.enquiry_id}\nStatus: ${enq.stage === 'completed' ? 'Completed 🎉' : enq.stage}\nSamples: ${enq.selected_samples ? enq.selected_samples.map((s) => `#${s.sample_no}`).join(', ') : 'Standard'}`;
+                        if (navigator.share) {
+                          navigator.share({ title: `Order ${enq.enquiry_id}`, text: shareText, url: window.location.href }).catch(() => {});
+                        } else {
+                          navigator.clipboard.writeText(shareText);
+                          alert(`Copied Order & FDS details to clipboard!\n\n${shareText}`);
+                        }
+                      }}
+                      style={{
+                        padding: '0.25rem 0.65rem',
+                        borderRadius: '6px',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        background: '#f1f5f9',
+                        color: '#1e293b',
+                        border: '1px solid #cbd5e1',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                        cursor: 'pointer',
+                      }}
+                      title="Share Order Details"
+                    >
+                      <Share2 size={12} />
+                      <span>Share</span>
+                    </button>
+
                     <span
                       style={{
                         padding: '0.25rem 0.75rem',
@@ -539,6 +597,37 @@ export const AllEnquiriesPage = ({ onOpenRegistration }) => {
                     </span>
                   </div>
                 </div>
+
+                {/* Selected Fabric Samples Row */}
+                {enq.selected_samples && enq.selected_samples.length > 0 && (
+                  <div style={{ marginBottom: '0.85rem', padding: '0.55rem 0.85rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: '#64748b', letterSpacing: '0.05em' }}>
+                      Selected Samples ({enq.selected_samples.length}):
+                    </span>
+                    <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
+                      {enq.selected_samples.map((s) => (
+                        <span
+                          key={s.sample_no}
+                          style={{
+                            fontSize: '0.75rem',
+                            fontWeight: 800,
+                            background: '#ffffff',
+                            border: '1px solid #cbd5e1',
+                            borderRadius: '6px',
+                            padding: '2px 8px',
+                            color: '#0f172a',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.3rem',
+                          }}
+                        >
+                          <Layers size={11} color="#dc2626" />
+                          <span>#{s.sample_no} {s.article ? `(${s.article})` : ''}</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Requirement Summary Excerpt */}
                 {enq.summary && (
