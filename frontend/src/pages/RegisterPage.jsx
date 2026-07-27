@@ -1,10 +1,59 @@
 import React, { useState } from 'react';
-import { ArrowRight, Lock, Mail, CheckCircle, AlertCircle } from 'lucide-react';
+import { ArrowRight, Lock, AlertCircle, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+
+const BRAND_OPTIONS = [
+  'ZARA',
+  'H&M',
+  'Nike',
+  'Adidas',
+  "Levi's",
+  'Puma',
+  'Uniqlo',
+  'Gap',
+  'Gucci',
+  'Prada',
+  'Tommy Hilfiger',
+  'Calvin Klein',
+  'Marks & Spencer',
+  'Other (Custom)',
+];
+
+const COUNTRY_OPTIONS = [
+  'Spain',
+  'India',
+  'United States',
+  'United Kingdom',
+  'Germany',
+  'France',
+  'Italy',
+  'Turkey',
+  'Bangladesh',
+  'China',
+  'Vietnam',
+  'Japan',
+  'Brazil',
+  'Canada',
+  'Australia',
+  'United Arab Emirates',
+  'Other',
+];
 
 export const RegisterPage = ({ onSwitchToLogin }) => {
   const { register } = useAuth();
-  const [email, setEmail] = useState('');
+  
+  // Auto-generate a Buyer ID formatted as B-XXXXX
+  const [buyerId] = useState(() => 'B-' + String(Math.floor(10000 + Math.random() * 90000)));
+
+  const [buyerName, setBuyerName] = useState('ZARA');
+  const [brandName, setBrandName] = useState('ZARA');
+  const [customBrand, setCustomBrand] = useState('');
+  const [company, setCompany] = useState('Inditex');
+  const [country, setCountry] = useState('Spain');
+  const [contactPerson, setContactPerson] = useState('Mr. David Garcia');
+  const [email, setEmail] = useState('david.garcia@zara.com');
+  const [phoneNumber, setPhoneNumber] = useState('+34 612 345 678');
+
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState('');
@@ -13,11 +62,30 @@ export const RegisterPage = ({ onSwitchToLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    const effectiveBrand = brandName === 'Other (Custom)' ? customBrand : brandName;
+
+    if (!buyerName.trim()) { setError('Buyer Name is required'); return; }
+    if (!effectiveBrand.trim()) { setError('Brand Name is required'); return; }
+    if (!country) { setError('Country selection is required'); return; }
+    if (!email.trim()) { setError('Email is required'); return; }
     if (password !== confirm) { setError('Passwords do not match'); return; }
     if (password.length < 6) { setError('Password must be at least 6 characters'); return; }
+
     setSubmitting(true);
     try {
-      await register(email, password, confirm);
+      await register({
+        email,
+        password,
+        confirm,
+        buyerName,
+        brandName: effectiveBrand,
+        company,
+        country,
+        contactPerson,
+        phoneNumber,
+        buyerId,
+      });
     } catch (err) {
       setError(err.message || 'Registration failed');
     } finally {
@@ -29,146 +97,468 @@ export const RegisterPage = ({ onSwitchToLogin }) => {
     <div
       style={{
         minHeight: '100vh',
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        background: 'var(--cream)',
+        background: '#f8fafc',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '2rem 1.5rem 4rem',
+        fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
       }}
     >
-      {/* Left — editorial hero */}
-      <div
-        style={{
-          background: 'var(--charcoal)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          padding: '3rem',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <div
-            style={{
-              width: '36px', height: '36px', borderRadius: '50%',
-              background: 'var(--white)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '12px', fontWeight: 900, color: 'var(--charcoal)',
-            }}
-          >
-            FS
-          </div>
-          <span style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--white)', letterSpacing: '-0.03em' }}>
-            FabricSample
-          </span>
-        </div>
-
-        <div>
-          <div
-            style={{
-              fontSize: 'clamp(52px, 7vw, 90px)',
-              fontWeight: 900,
-              letterSpacing: '-0.05em',
-              lineHeight: 0.95,
-              color: 'var(--white)',
-              marginBottom: '1.5rem',
-            }}
-          >
-            Join<br />
-            <span style={{ color: 'var(--red)' }}>FabricSample</span><br />
-            Today.
-          </div>
-          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.95rem', lineHeight: 1.6, maxWidth: '340px' }}>
-            Start finding the perfect fabric samples matched to your buyer requirements.
-          </p>
-        </div>
-
-        <div style={{ display: 'flex', gap: '2.5rem' }}>
-          {[['100+', 'Fabric Samples'], ['Smart', 'AI Matching'], ['Fast', 'Quick Setup']].map(([num, label]) => (
-            <div key={label}>
-              <div style={{ fontSize: '1.3rem', fontWeight: 900, color: 'var(--white)', letterSpacing: '-0.04em' }}>{num}</div>
-              <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', fontWeight: 500, letterSpacing: '0.04em' }}>{label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Right — register form */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '3rem' }}>
-        <div style={{ maxWidth: '380px', width: '100%' }}>
-          <div style={{ marginBottom: '2.2rem' }}>
-            <h1 style={{ fontSize: '2.2rem', fontWeight: 900, letterSpacing: '-0.045em', color: 'var(--charcoal)', lineHeight: 1, marginBottom: '0.5rem' }}>
-              Create Account
+      {/* Top Header */}
+      <div style={{ maxWidth: '960px', width: '100%', marginBottom: '1.8rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+          <div>
+            <h1
+              style={{
+                fontSize: '1.85rem',
+                fontWeight: 800,
+                color: '#0f172a',
+                letterSpacing: '-0.025em',
+                marginBottom: '0.25rem',
+              }}
+            >
+              Buyer Enquiry Registration
             </h1>
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-              Get started with your fabric workspace.
+            <p style={{ fontSize: '0.92rem', color: '#64748b' }}>
+              Register new buyer enquiry and requirement details
             </p>
           </div>
 
-          {error && (
-            <div
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <button
+              onClick={onSwitchToLogin}
               style={{
-                marginBottom: '1.25rem', padding: '0.75rem 1rem',
-                borderRadius: 'var(--radius-md)',
-                background: 'rgba(232,51,26,0.08)', border: '1.5px solid rgba(232,51,26,0.25)',
-                color: 'var(--red)', fontSize: '0.85rem',
-                display: 'flex', alignItems: 'flex-start', gap: '0.5rem',
+                padding: '0.55rem 1.25rem',
+                borderRadius: '8px',
+                border: '1px solid #cbd5e1',
+                background: '#ffffff',
+                color: '#334155',
+                fontSize: '0.88rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
               }}
             >
-              <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '1px' }} />
-              <span>{error}</span>
-            </div>
-          )}
+              Cancel / Back to Sign In
+            </button>
+          </div>
+        </div>
+      </div>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {[
-              { label: 'Email', type: 'email', val: email, setter: setEmail, placeholder: 'you@example.com', icon: Mail },
-              { label: 'Password', type: 'password', val: password, setter: setPassword, placeholder: 'At least 6 characters', icon: Lock },
-              { label: 'Confirm Password', type: 'password', val: confirm, setter: setConfirm, placeholder: 'Confirm your password', icon: CheckCircle },
-            ].map(({ label, type, val, setter, placeholder, icon: Icon }) => (
-              <div key={label}>
-                <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-dim)', marginBottom: '0.45rem' }}>
-                  {label}
-                </label>
-                <div style={{ position: 'relative' }}>
-                  <input
-                    type={type}
-                    required
-                    value={val}
-                    onChange={(e) => setter(e.target.value)}
-                    placeholder={placeholder}
-                    className="input-field"
-                    style={{ paddingLeft: '2.6rem' }}
-                  />
-                  <Icon size={16} color="var(--text-dim)" style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-                </div>
+      {/* Main Registration Form Container */}
+      <div
+        style={{
+          maxWidth: '960px',
+          width: '100%',
+          background: '#ffffff',
+          borderRadius: '16px',
+          boxShadow: '0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04)',
+          border: '1px solid #e2e8f0',
+          padding: '2.25rem',
+        }}
+      >
+        {error && (
+          <div
+            style={{
+              marginBottom: '1.5rem',
+              padding: '0.88rem 1.1rem',
+              borderRadius: '10px',
+              background: '#fef2f2',
+              border: '1px solid #fecaca',
+              color: '#dc2626',
+              fontSize: '0.88rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.6rem',
+              fontWeight: 500,
+            }}
+          >
+            <AlertCircle size={18} style={{ flexShrink: 0 }} />
+            <span>{error}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          {/* Section 1 Card */}
+          <div
+            style={{
+              background: '#ffffff',
+              borderRadius: '12px',
+              border: '1px solid #f1f5f9',
+              padding: '1.5rem',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+              marginBottom: '2rem',
+            }}
+          >
+            {/* Section Title Header */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.85rem',
+                marginBottom: '1.75rem',
+                paddingBottom: '0.85rem',
+                borderBottom: '1.5px solid #f1f5f9',
+              }}
+            >
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '50%',
+                  background: '#eff6ff',
+                  color: '#2563eb',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 700,
+                }}
+              >
+                <User size={20} />
               </div>
-            ))}
+              <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#1e293b' }}>
+                1. Buyer Information
+              </h2>
+            </div>
+
+            {/* Fields Grid */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                gap: '1.35rem 1.5rem',
+              }}
+            >
+              {/* Buyer Name */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '0.45rem' }}>
+                  Buyer Name <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={buyerName}
+                  onChange={(e) => setBuyerName(e.target.value)}
+                  placeholder="e.g. ZARA"
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 0.9rem',
+                    borderRadius: '8px',
+                    border: '1.5px solid #cbd5e1',
+                    fontSize: '0.92rem',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              {/* Brand Name */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '0.45rem' }}>
+                  Brand Name <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <select
+                  value={brandName}
+                  onChange={(e) => setBrandName(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 0.9rem',
+                    borderRadius: '8px',
+                    border: '1.5px solid #cbd5e1',
+                    fontSize: '0.92rem',
+                    background: '#ffffff',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  {BRAND_OPTIONS.map((b) => (
+                    <option key={b} value={b}>{b}</option>
+                  ))}
+                </select>
+                {brandName === 'Other (Custom)' && (
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter custom brand name"
+                    value={customBrand}
+                    onChange={(e) => setCustomBrand(e.target.value)}
+                    style={{
+                      width: '100%',
+                      marginTop: '0.5rem',
+                      padding: '0.65rem 0.9rem',
+                      borderRadius: '8px',
+                      border: '1.5px solid #cbd5e1',
+                      fontSize: '0.88rem',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                )}
+              </div>
+
+              {/* Company */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '0.45rem' }}>
+                  Company
+                </label>
+                <input
+                  type="text"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  placeholder="e.g. Inditex"
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 0.9rem',
+                    borderRadius: '8px',
+                    border: '1.5px solid #cbd5e1',
+                    fontSize: '0.92rem',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              {/* Country */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '0.45rem' }}>
+                  Country <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <select
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 0.9rem',
+                    borderRadius: '8px',
+                    border: '1.5px solid #cbd5e1',
+                    fontSize: '0.92rem',
+                    background: '#ffffff',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  {COUNTRY_OPTIONS.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Contact Person */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '0.45rem' }}>
+                  Contact Person
+                </label>
+                <input
+                  type="text"
+                  value={contactPerson}
+                  onChange={(e) => setContactPerson(e.target.value)}
+                  placeholder="e.g. Mr. David Garcia"
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 0.9rem',
+                    borderRadius: '8px',
+                    border: '1.5px solid #cbd5e1',
+                    fontSize: '0.92rem',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              {/* Email */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '0.45rem' }}>
+                  Email <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="david.garcia@zara.com"
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 0.9rem',
+                    borderRadius: '8px',
+                    border: '1.5px solid #cbd5e1',
+                    fontSize: '0.92rem',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              {/* Phone Number */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '0.45rem' }}>
+                  Phone Number
+                </label>
+                <input
+                  type="text"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="+34 612 345 678"
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 0.9rem',
+                    borderRadius: '8px',
+                    border: '1.5px solid #cbd5e1',
+                    fontSize: '0.92rem',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              {/* Buyer ID */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#64748b', marginBottom: '0.45rem' }}>
+                  Buyer ID
+                </label>
+                <input
+                  type="text"
+                  readOnly
+                  disabled
+                  value={buyerId}
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 0.9rem',
+                    borderRadius: '8px',
+                    border: '1.5px solid #e2e8f0',
+                    background: '#f8fafc',
+                    color: '#475569',
+                    fontSize: '0.92rem',
+                    fontWeight: 600,
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Account Credentials Card */}
+          <div
+            style={{
+              background: '#f8fafc',
+              borderRadius: '12px',
+              border: '1px solid #e2e8f0',
+              padding: '1.5rem',
+              marginBottom: '2rem',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.65rem',
+                marginBottom: '1.25rem',
+              }}
+            >
+              <Lock size={18} color="#334155" />
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#1e293b' }}>
+                Account Password & Credentials
+              </h3>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                gap: '1.25rem',
+              }}
+            >
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '0.45rem' }}>
+                  Password <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="At least 6 characters"
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 0.9rem',
+                    borderRadius: '8px',
+                    border: '1.5px solid #cbd5e1',
+                    fontSize: '0.92rem',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '0.45rem' }}>
+                  Confirm Password <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  placeholder="Confirm password"
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 0.9rem',
+                    borderRadius: '8px',
+                    border: '1.5px solid #cbd5e1',
+                    fontSize: '0.92rem',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Form Action Controls */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ fontSize: '0.88rem', color: '#64748b' }}>
+              Already registered?{' '}
+              <button
+                type="button"
+                onClick={onSwitchToLogin}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#2563eb',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  fontSize: '0.88rem',
+                  textDecoration: 'underline',
+                }}
+              >
+                Sign in here
+              </button>
+            </div>
 
             <button
               type="submit"
               disabled={submitting}
-              className="btn-primary"
-              style={{ marginTop: '0.5rem', padding: '0.9rem', width: '100%', fontSize: '0.95rem', borderRadius: 'var(--radius-md)' }}
-            >
-              <span>{submitting ? 'Creating Account…' : 'Create Account'}</span>
-              <ArrowRight size={17} />
-            </button>
-          </form>
-
-          <div style={{ textAlign: 'center', marginTop: '1.75rem', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
-            Already have an account?{' '}
-            <button
-              onClick={onSwitchToLogin}
               style={{
-                background: 'none', border: 'none',
-                color: 'var(--charcoal)', fontWeight: 700, cursor: 'pointer',
-                fontFamily: 'var(--font-sans)', fontSize: '0.88rem',
-                textDecoration: 'underline', textUnderlineOffset: '3px',
+                padding: '0.85rem 2.25rem',
+                borderRadius: '10px',
+                background: submitting ? '#94a3b8' : 'linear-gradient(135deg, #1e293b, #0f172a)',
+                color: '#ffffff',
+                fontSize: '0.95rem',
+                fontWeight: 700,
+                border: 'none',
+                cursor: submitting ? 'not-allowed' : 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                boxShadow: '0 4px 12px rgba(15, 23, 42, 0.15)',
+                transition: 'all 0.2s',
               }}
             >
-              Sign in →
+              <span>{submitting ? 'Registering Buyer Account…' : 'Register Buyer Account'}</span>
+              <ArrowRight size={18} />
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
 };
+
+export default RegisterPage;

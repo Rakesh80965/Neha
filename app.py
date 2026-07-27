@@ -619,9 +619,14 @@ def serve_react(path):
 @app.route("/api/auth/me")
 def api_auth_me():
     if "user_id" in session:
+        buyer_info = session.get("buyer_info", {})
         return jsonify({
             "authenticated": True,
-            "user": {"id": session["user_id"], "email": session.get("username", "")}
+            "user": {
+                "id": session["user_id"],
+                "email": session.get("username", ""),
+                **buyer_info
+            }
         })
     return jsonify({"authenticated": False}), 401
 
@@ -662,10 +667,24 @@ def register():
             email = data.get("email", "").strip()
             password = data.get("password", "")
             confirm = data.get("confirm", password)
+            buyer_name = data.get("buyerName", data.get("buyer_name", "")).strip()
+            brand_name = data.get("brandName", data.get("brand_name", "")).strip()
+            company = data.get("company", "").strip()
+            country = data.get("country", "").strip()
+            contact_person = data.get("contactPerson", data.get("contact_person", "")).strip()
+            phone_number = data.get("phoneNumber", data.get("phone_number", "")).strip()
+            buyer_id = data.get("buyerId", data.get("buyer_id", "")).strip()
         else:
             email = request.form.get("email", "").strip()
             password = request.form.get("password", "")
             confirm = request.form.get("confirm", "")
+            buyer_name = request.form.get("buyer_name", "").strip()
+            brand_name = request.form.get("brand_name", "").strip()
+            company = request.form.get("company", "").strip()
+            country = request.form.get("country", "").strip()
+            contact_person = request.form.get("contact_person", "").strip()
+            phone_number = request.form.get("phone_number", "").strip()
+            buyer_id = request.form.get("buyer_id", "").strip()
 
         if not email or not password:
             err = "Email and password are required"
@@ -688,8 +707,28 @@ def register():
             if user and user.get("id"):
                 session["user_id"] = user["id"]
                 session["username"] = user.get("email", email)
+                session["buyer_info"] = {
+                    "buyer_name": buyer_name,
+                    "brand_name": brand_name,
+                    "company": company,
+                    "country": country,
+                    "contact_person": contact_person,
+                    "phone_number": phone_number,
+                    "buyer_id": buyer_id,
+                }
+                user_data = {
+                    "id": user["id"],
+                    "email": session["username"],
+                    "buyer_name": buyer_name,
+                    "brand_name": brand_name,
+                    "company": company,
+                    "country": country,
+                    "contact_person": contact_person,
+                    "phone_number": phone_number,
+                    "buyer_id": buyer_id,
+                }
                 if is_json_req:
-                    return jsonify({"status": "ok", "user": {"id": user["id"], "email": session["username"]}})
+                    return jsonify({"status": "ok", "user": user_data})
                 return redirect(url_for("dashboard"))
             if is_json_req:
                 return jsonify({"error": "Registration failed"}), 400

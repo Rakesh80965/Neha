@@ -75,14 +75,21 @@ export const AuthProvider = ({ children }) => {
     setUser({ email: 'demo@fabricworkspace.com', name: 'Demo User', role: 'guest' });
   };
 
-  const register = async (email, password, confirm) => {
+  const register = async (emailOrData, password, confirm, buyerDetails = {}) => {
+    let payload = {};
+    if (typeof emailOrData === 'object' && emailOrData !== null) {
+      payload = emailOrData;
+    } else {
+      payload = { email: emailOrData, password, confirm, ...buyerDetails };
+    }
+
     let res;
     try {
       res = await fetch(getApiUrl('/api/auth/register'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ email, password, confirm }),
+        body: JSON.stringify(payload),
       });
     } catch (err) {
       throw new Error('Backend server connection failed');
@@ -91,7 +98,17 @@ export const AuthProvider = ({ children }) => {
     if (!res.ok || data.error) {
       throw new Error(data.error || 'Failed to create account');
     }
-    setUser(data.user || { email, role: 'user' });
+    setUser(data.user || {
+      email: payload.email,
+      buyer_name: payload.buyerName || payload.buyer_name,
+      brand_name: payload.brandName || payload.brand_name,
+      company: payload.company,
+      country: payload.country,
+      contact_person: payload.contactPerson || payload.contact_person,
+      phone_number: payload.phoneNumber || payload.phone_number,
+      buyer_id: payload.buyerId || payload.buyer_id,
+      role: 'user'
+    });
     return data;
   };
 
