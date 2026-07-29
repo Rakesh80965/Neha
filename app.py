@@ -612,7 +612,7 @@ def serve_react(path):
     if os.path.exists(index_path):
         return send_from_directory(dist_dir, "index.html")
     if "user_id" in session:
-        return redirect(url_for("dashboard"))
+        return redirect("/")
     return redirect(url_for("login"))
 
 
@@ -648,7 +648,7 @@ def login():
             session["username"] = result["user"]["email"]
             if is_json_req:
                 return jsonify({"status": "ok", "user": {"id": result["user"]["id"], "email": result["user"]["email"]}})
-            return redirect(url_for("dashboard"))
+            return redirect("/")
         except Exception as e:
             if is_json_req:
                 return jsonify({"error": str(e) or "Invalid email or password"}), 400
@@ -737,7 +737,7 @@ def register():
                 }
                 if is_json_req:
                     return jsonify({"status": "ok", "user": user_data})
-                return redirect(url_for("dashboard"))
+                return redirect("/")
             if is_json_req:
                 return jsonify({"error": "Registration failed"}), 400
             return render_template_string(REGISTER_TEMPLATE, error="Registration failed")

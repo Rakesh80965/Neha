@@ -9,9 +9,13 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
       const res = await fetch(getApiUrl('/api/auth/me'), {
         credentials: 'include',
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
       if (res.ok) {
         const data = await res.json();
         if (data.authenticated) {

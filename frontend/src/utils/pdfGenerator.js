@@ -12,8 +12,9 @@ export const generateFDSPDF = async (elementIdOrNode, filename = 'NSL_FDS_Report
     margin: [6, 6, 6, 6],
     filename: filename,
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0, windowWidth: 1024 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['css', 'legacy'], before: '.html2pdf__page-break' }
   };
 
   try {
@@ -37,36 +38,41 @@ export const generateFDSPDF = async (elementIdOrNode, filename = 'NSL_FDS_Report
         }
       });
 
-      // 1. Generate & download PDF file directly to device
-      await html2pdfFunc().set(opt).from(elementClone).save();
+      // Mount clone to DOM body so html2canvas calculates full scrollHeight and page breaks!
+      elementClone.style.position = 'absolute';
+      elementClone.style.left = '0px';
+      elementClone.style.top = '0px';
+      elementClone.style.width = '800px';
+      elementClone.style.zIndex = '-99999';
+      elementClone.style.opacity = '1';
+      elementClone.style.background = '#ffffff';
+      document.body.appendChild(elementClone);
 
-      // 2. Web Share API check for PDF file attachment (if supported synchronously)
-      if (navigator.share) {
-        try {
-          const pdfBlob = await html2pdfFunc().set(opt).from(elementClone).output('blob');
-          if (pdfBlob) {
-            const pdfFile = new File([pdfBlob], filename, { type: 'application/pdf' });
-            if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
-              await navigator.share({
-                title: shareTitle,
-                text: shareText,
-                files: [pdfFile],
-              });
-              return true;
+      try {
+        // 1. Generate & download PDF file directly to device
+        await html2pdfFunc().set(opt).from(elementClone).save();
+
+        // 2. Web Share API check for PDF file attachment (if supported synchronously)
+        if (navigator.share) {
+          try {
+            const pdfBlob = await html2pdfFunc().set(opt).from(elementClone).output('blob');
+            if (pdfBlob) {
+              const pdfFile = new File([pdfBlob], filename, { type: 'application/pdf' });
+              if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+                await navigator.share({
+                  title: shareTitle,
+                  text: shareText,
+                  files: [pdfFile],
+                });
+              }
             }
+          } catch (shareErr) {
+            console.log('Web share fallback:', shareErr);
           }
-        } catch (shareErr) {
-          console.log('Web share fallback:', shareErr);
         }
-
-        // Web Share API text fallback if files aren't shareable on this browser/OS
-        try {
-          await navigator.share({
-            title: shareTitle,
-            text: `${shareText}\n\nPDF Report: ${filename}`,
-          });
-        } catch (e) {
-          // ignore user cancel
+      } finally {
+        if (elementClone.parentNode) {
+          elementClone.parentNode.removeChild(elementClone);
         }
       }
       return true;

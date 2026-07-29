@@ -19,14 +19,15 @@ export const getApiUrl = (path) => {
 
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
 
-  // If in local development and proxying to local Flask server without explicit VITE_API_BASE_URL
+  // If running on local dev server or if frontend and backend share the same domain
   if (
-    import.meta.env.DEV &&
-    !import.meta.env.VITE_API_BASE_URL &&
-    window.location.hostname === 'localhost'
+    (import.meta.env.DEV && !import.meta.env.VITE_API_BASE_URL && typeof window !== 'undefined' && window.location.hostname === 'localhost') ||
+    (typeof window !== 'undefined' && API_BASE_URL && API_BASE_URL.includes(window.location.host))
   ) {
     return cleanPath;
   }
 
   return `${API_BASE_URL}${cleanPath}`;
 };
+
+

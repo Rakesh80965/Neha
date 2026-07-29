@@ -24,9 +24,9 @@ import {
 } from 'lucide-react';
 import { getApiUrl } from '../config';
 import { OrderTracking } from '../components/ui/order-tracking';
-import confetti from 'canvas-confetti';
 import { generateFDSPDF } from '../utils/pdfGenerator';
 import { ShareModal } from '../components/ShareModal';
+import { TestReport1026Component } from '../components/TestReport1026Component';
 
 const triggerCelebration = () => {
   const count = 200;
@@ -1168,8 +1168,13 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
               )}
             </div>
 
+            {/* Attached Test Report for Sample #1026 if present */}
+            {((selectedEnquiry.selected_samples && selectedEnquiry.selected_samples.some(s => (typeof s === 'object' ? (s.sample_no == 1026 || String(s.sample_no).includes('1026') || (s.article && s.article.includes('A37342PA'))) : String(s).includes('1026')))) || JSON.stringify(selectedEnquiry).includes('1026') || JSON.stringify(selectedEnquiry).includes('A37342PA')) && (
+              <TestReport1026Component />
+            )}
+
             {/* Bottom Actions Bar with Edit Button */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #e2e8f0', paddingTop: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #e2e8f0', paddingTop: '1.5rem', marginTop: '1.5rem' }}>
               <button
                 onClick={() => setSelectedEnquiry(null)}
                 style={{
@@ -1259,7 +1264,7 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
           buyerName={activeShareEnquiry.buyer_name}
           enquiryId={activeShareEnquiry.enquiry_id}
           samples={activeShareEnquiry.selected_samples || []}
-          printableId="enquiry-detail-printable-sheet"
+          printableId="share-modal-pdf-template"
         />
       )}
     </div>

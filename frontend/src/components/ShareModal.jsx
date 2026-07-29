@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, FileDown } from 'lucide-react';
 import { generateFDSPDF } from '../utils/pdfGenerator';
+import { TestReport1026Component } from './TestReport1026Component';
 
 export const ShareModal = ({ isOpen, onClose, fdsNo, buyerName, enquiryId, samples = [], printableId = 'fds-report-printable-area' }) => {
   const [downloading, setDownloading] = useState(false);
@@ -8,10 +9,37 @@ export const ShareModal = ({ isOpen, onClose, fdsNo, buyerName, enquiryId, sampl
 
   if (!isOpen) return null;
 
-  const targetId = document.getElementById(printableId) ? printableId : 'share-modal-pdf-template';
+  const has1026 = (() => {
+    if (Array.isArray(samples) && samples.length > 0) {
+      const match = samples.some((s) => {
+        if (!s) return false;
+        if (typeof s === 'number') return s === 1026;
+        if (typeof s === 'string') return s.includes('1026') || s.toLowerCase().includes('a37342pa');
+        if (typeof s === 'object') {
+          const val = s.sample_no || s.sampleNo || s.id;
+          if (val == 1026 || String(val).includes('1026')) return true;
+          if (s.article && String(s.article).toLowerCase().includes('a37342pa')) return true;
+          return JSON.stringify(s).includes('1026') || JSON.stringify(s).toLowerCase().includes('a37342pa');
+        }
+        return false;
+      });
+      if (match) return true;
+    }
+    const combinedStr = `${fdsNo || ''} ${enquiryId || ''} ${buyerName || ''}`.toLowerCase();
+    if (combinedStr.includes('1026') || combinedStr.includes('a37342pa')) return true;
+
+    // Check if #share-modal-pdf-template contains sample #1026 in its text
+    const tmpl = document.getElementById('share-modal-pdf-template');
+    if (tmpl && (tmpl.innerText.includes('1026') || tmpl.innerText.includes('A37342PA'))) {
+      return true;
+    }
+    return false;
+  })();
+
+  const targetId = document.getElementById('share-modal-pdf-template') ? 'share-modal-pdf-template' : (document.getElementById(printableId) ? printableId : 'share-modal-pdf-template');
   const displayId = fdsNo || enquiryId || 'Order';
   const title = `NSL Feasibility Report (${displayId})`;
-  const shareText = `NSL Feasibility & Buyer Order\nBuyer: ${buyerName || 'Client'}\nFDS No / ID: ${displayId}\nSamples: ${samples.map((s) => `#${s.sample_no}`).join(', ') || 'Standard'}\nStatus: Completed 🎉`;
+  const shareText = `NSL Feasibility & Buyer Order\nBuyer: ${buyerName || 'Client'}\nFDS No / ID: ${displayId}\nSamples: ${samples.map((s) => `#${s.sample_no || s}`).join(', ') || 'Standard'}\nStatus: Completed 🎉`;
 
   const handleDownloadPDF = async () => {
     setDownloading(true);
@@ -22,6 +50,16 @@ export const ShareModal = ({ isOpen, onClose, fdsNo, buyerName, enquiryId, sampl
         title,
         shareText
       );
+      if (has1026) {
+        setTimeout(() => {
+          const link = document.createElement('a');
+          link.href = '/test_report_1026.html';
+          link.download = 'Test_Report_Sample_1026.html';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }, 300);
+      }
     } catch (e) {
       alert('Could not download PDF: ' + e.message);
     } finally {
@@ -200,6 +238,15 @@ export const ShareModal = ({ isOpen, onClose, fdsNo, buyerName, enquiryId, sampl
                 </tbody>
               </table>
             </div>
+
+            {has1026 && (
+              <div style={{ marginTop: '20px' }}>
+                <div style={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '6px', color: '#dc2626' }}>
+                  4. Attached Woven Fabric Test Report (Sample #1026)
+                </div>
+                <TestReport1026Component />
+              </div>
+            )}
           </div>
         </div>
       </div>

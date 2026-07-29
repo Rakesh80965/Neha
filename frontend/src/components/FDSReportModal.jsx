@@ -3,6 +3,7 @@ import { X, CheckCircle, Share2, Printer, Send, Layers, Copy, Check, FileDown } 
 import confetti from 'canvas-confetti';
 import { generateFDSPDF } from '../utils/pdfGenerator';
 import { ShareModal } from './ShareModal';
+import { TestReport1026Component } from './TestReport1026Component';
 
 const DEFAULT_PARAMETERS = [
   { name: 'FABRIC WEIGHT', method: 'ISO 3801', custReq: '+/-5%', nslCommit: '+/-5%', remarks: '' },
@@ -44,7 +45,31 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
   const [parameters, setParameters] = useState(DEFAULT_PARAMETERS);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
-  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const has1026 = (() => {
+    if (Array.isArray(samples) && samples.length > 0) {
+      const match = samples.some((s) => {
+        if (!s) return false;
+        if (typeof s === 'number') return s === 1026;
+        if (typeof s === 'string') return s.includes('1026') || s.toLowerCase().includes('a37342pa');
+        if (typeof s === 'object') {
+          const val = s.sample_no || s.sampleNo || s.id;
+          if (val == 1026 || String(val).includes('1026')) return true;
+          if (s.article && String(s.article).toLowerCase().includes('a37342pa')) return true;
+          return JSON.stringify(s).includes('1026') || JSON.stringify(s).toLowerCase().includes('a37342pa');
+        }
+        return false;
+      });
+      if (match) return true;
+    }
+    const combinedStr = `${fdsNo || ''} ${endBuyer || ''} ${quality || ''} ${printStyle || ''}`.toLowerCase();
+    if (combinedStr.includes('1026') || combinedStr.includes('a37342pa')) return true;
+
+    const tmpl = document.getElementById('fds-report-printable-area');
+    if (tmpl && (tmpl.innerText.includes('1026') || tmpl.innerText.includes('A37342PA'))) {
+      return true;
+    }
+    return false;
+  })();
 
   const handleSharePDF = async () => {
     if (isGeneratingPdf) return;
@@ -56,6 +81,16 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
         `NSL Feasibility Report - ${fdsNo}`,
         `NSL Feasibility & Buyer Order Report (${fdsNo}) for ${endBuyer}.`
       );
+      if (has1026) {
+        setTimeout(() => {
+          const link = document.createElement('a');
+          link.href = '/test_report_1026.html';
+          link.download = 'Test_Report_Sample_1026.html';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }, 300);
+      }
     } catch (err) {
       alert('Could not generate PDF: ' + err.message);
     } finally {
@@ -451,6 +486,15 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
               ))}
             </tbody>
           </table>
+
+          {has1026 && (
+            <div style={{ marginTop: '24px' }}>
+              <div style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#dc2626', marginBottom: '0.5rem' }}>
+                4. Official Attached Woven Fabric Test Report (Sample #1026)
+              </div>
+              <TestReport1026Component />
+            </div>
+          )}
         </div>
 
         {/* Modal Action Footer */}
