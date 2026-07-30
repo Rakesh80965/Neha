@@ -148,7 +148,6 @@ export const SearchPage = ({ onOpenModal }) => {
                   <option value="TWILL">TWILL</option>
                   <option value="DOBBY">DOBBY</option>
                   <option value="SATIN">SATIN</option>
-                  <option value="HBT">HBT</option>
                 </select>
               </div>
 
