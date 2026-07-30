@@ -33,13 +33,13 @@ export const Navbar = () => {
             alignItems: 'center',
             justifyContent: 'center',
             color: 'var(--white)',
-            fontSize: '13px',
+            fontSize: '11px',
             fontWeight: 800,
             letterSpacing: '-0.02em',
             flexShrink: 0,
           }}
         >
-          FS
+          FSL
         </div>
         <div>
           <div
@@ -51,10 +51,10 @@ export const Navbar = () => {
               lineHeight: 1.1,
             }}
           >
-            FabricSample
+            Fabric Sample Library
           </div>
           <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', letterSpacing: '0.04em', fontWeight: 500 }}>
-            Intelligent Buyer Requirement Matcher
+            Sample Buyer Requirement Matcher
           </div>
         </div>
       </div>

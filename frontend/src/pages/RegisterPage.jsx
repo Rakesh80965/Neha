@@ -68,7 +68,6 @@ export const RegisterPage = ({ onSwitchToLogin }) => {
 
     const effectiveBrand = brandName === 'Other (Custom)' ? customBrand : brandName;
 
-    if (!buyerName.trim()) { setError('Buyer Name is required'); return; }
     if (!effectiveBrand.trim() || effectiveBrand === 'Select Brand') { setError('Brand Name is required'); return; }
     if (!country || country === 'Select Country') { setError('Country selection is required'); return; }
     if (!email.trim()) { setError('Email is required'); return; }
@@ -81,8 +80,8 @@ export const RegisterPage = ({ onSwitchToLogin }) => {
         email: email.trim(),
         password,
         confirm,
-        buyerName: buyerName.trim(),
-        brandName: effectiveBrand,
+        buyerName: effectiveBrand.trim(),
+        brandName: effectiveBrand.trim(),
         company,
         country,
         contactPerson,
@@ -233,29 +232,6 @@ export const RegisterPage = ({ onSwitchToLogin }) => {
                 gap: '1.35rem 1.5rem',
               }}
             >
-              {/* Buyer Name */}
-              <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '0.45rem' }}>
-                  Buyer Name <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={buyerName}
-                  onChange={(e) => setBuyerName(e.target.value)}
-                  placeholder="e.g. ZARA"
-                  style={{
-                    width: '100%',
-                    padding: '0.7rem 0.9rem',
-                    borderRadius: '8px',
-                    border: '1.5px solid #cbd5e1',
-                    fontSize: '0.92rem',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                  }}
-                />
-              </div>
-
               {/* Brand Name */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '0.45rem' }}>

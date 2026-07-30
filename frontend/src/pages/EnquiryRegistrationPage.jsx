@@ -72,8 +72,7 @@ const STATUSES = ['New', 'In Progress', 'Pending', 'Completed', 'On Hold'];
 const END_USES = ['Shirts', 'Pants', 'Dresses', 'Outerwear', 'Suits', 'Activewear', 'Other'];
 
 export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
-  // Section 1: Buyer Information (Empty by default)
-  const [buyerName, setBuyerName] = useState('');
+  // Section 1: Brand & Buyer Information
   const [brandName, setBrandName] = useState('Select Brand');
   const [customBrand, setCustomBrand] = useState('');
   const [company, setCompany] = useState('');
@@ -89,8 +88,7 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
   const [dueDate, setDueDate] = useState('');
   const [priority, setPriority] = useState('High');
   const [requirementType, setRequirementType] = useState('Development');
-  const [season, setSeason] = useState('AW 25');
-  const [quantity, setQuantity] = useState('');
+  const [address, setAddress] = useState('');
   const [status, setStatus] = useState('New');
   const [endUse, setEndUse] = useState('Shirts');
 
@@ -145,7 +143,6 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
 
     const effectiveBrand = brandName === 'Other (Custom)' ? customBrand : brandName;
 
-    if (!buyerName.trim()) { setErrorMsg('Buyer Name is required'); return; }
     if (!effectiveBrand.trim() || effectiveBrand === 'Select Brand') { setErrorMsg('Brand Name is required'); return; }
     if (!country || country === 'Select Country') { setErrorMsg('Country is required'); return; }
     if (!email.trim()) { setErrorMsg('Email is required'); return; }
@@ -154,8 +151,8 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
     setSaving(true);
     try {
       const payload = {
-        buyer_name: buyerName.trim(),
-        brand_name: effectiveBrand,
+        buyer_name: effectiveBrand.trim(),
+        brand_name: effectiveBrand.trim(),
         company,
         country,
         contact_person: contactPerson,
@@ -167,8 +164,7 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
         due_date: dueDate,
         priority,
         requirement_type: requirementType,
-        season,
-        quantity,
+        address,
         status,
         end_use: endUse,
         summary,
@@ -363,7 +359,7 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
                 <User size={18} />
               </div>
               <h2 style={{ fontSize: '1.08rem', fontWeight: 700, color: '#1e293b' }}>
-                1. Buyer Information
+                1. Brand & Buyer Information
               </h2>
             </div>
 
@@ -374,29 +370,6 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
                 gap: '1.2rem',
               }}
             >
-              {/* Buyer Name */}
-              <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: '#334155', marginBottom: '0.4rem' }}>
-                  Buyer Name <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={buyerName}
-                  onChange={(e) => setBuyerName(e.target.value)}
-                  placeholder="e.g. ZARA"
-                  style={{
-                    width: '100%',
-                    padding: '0.65rem 0.85rem',
-                    borderRadius: '8px',
-                    border: '1.5px solid #cbd5e1',
-                    fontSize: '0.9rem',
-                    boxSizing: 'border-box',
-                    outline: 'none',
-                  }}
-                />
-              </div>
-
               {/* Brand Name */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: '#334155', marginBottom: '0.4rem' }}>
@@ -746,41 +719,16 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
                 </select>
               </div>
 
-              {/* Season */}
-              <div>
+              {/* Address */}
+              <div style={{ gridColumn: 'span 2' }}>
                 <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: '#334155', marginBottom: '0.4rem' }}>
-                  Season
-                </label>
-                <select
-                  value={season}
-                  onChange={(e) => setSeason(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '0.65rem 0.85rem',
-                    borderRadius: '8px',
-                    border: '1.5px solid #cbd5e1',
-                    fontSize: '0.9rem',
-                    background: '#ffffff',
-                    boxSizing: 'border-box',
-                    outline: 'none',
-                  }}
-                >
-                  {SEASONS.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Quantity */}
-              <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: '#334155', marginBottom: '0.4rem' }}>
-                  Quantity (if known)
+                  Address
                 </label>
                 <input
                   type="text"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                  placeholder="e.g. 5000 Mtrs"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="e.g. 123 Fashion Ave, Suite 400, New York, NY"
                   style={{
                     width: '100%',
                     padding: '0.65rem 0.85rem',
@@ -1196,14 +1144,23 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.85rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: '#64748b', fontWeight: 500 }}>Buyer</span>
-                <span style={{ fontWeight: 700, color: '#0f172a' }}>{buyerName || '—'}</span>
+                <span style={{ color: '#64748b', fontWeight: 500 }}>Brand Name</span>
+                <span style={{ fontWeight: 700, color: '#0f172a' }}>
+                  {brandName !== 'Select Brand' ? (brandName === 'Other (Custom)' ? customBrand || '—' : brandName) : '—'}
+                </span>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: '#64748b', fontWeight: 500 }}>Enquiry ID</span>
                 <span style={{ fontWeight: 600, color: '#334155' }}>{enquiryId}</span>
               </div>
+
+              {address && (
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b', fontWeight: 500 }}>Address</span>
+                  <span style={{ fontWeight: 600, color: '#334155', maxWidth: '160px', textAlign: 'right' }}>{address}</span>
+                </div>
+              )}
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ color: '#64748b', fontWeight: 500 }}>Priority</span>

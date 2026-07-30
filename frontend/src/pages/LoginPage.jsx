@@ -49,14 +49,14 @@ export const LoginPage = ({ onSwitchToRegister }) => {
               width: '36px', height: '36px', borderRadius: '50%',
               background: 'var(--white)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '12px', fontWeight: 900, color: 'var(--charcoal)',
+              fontSize: '11px', fontWeight: 900, color: 'var(--charcoal)',
               letterSpacing: '-0.03em',
             }}
           >
-            FS
+            FSL
           </div>
           <span style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--white)', letterSpacing: '-0.03em' }}>
-            FabricSample
+            Fabric Sample Library
           </span>
         </div>
 
@@ -72,18 +72,15 @@ export const LoginPage = ({ onSwitchToRegister }) => {
               marginBottom: '1.5rem',
             }}
           >
-            Intelligent<br />
+            Sample<br />
             <span style={{ color: 'var(--red)' }}>Fabric</span><br />
             Search.
           </div>
-          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.95rem', fontWeight: 400, maxWidth: '340px', lineHeight: 1.6 }}>
-            Recommendation engine for accurate and faster fabric sample library selection.
-          </p>
         </div>
 
         {/* Footer stats */}
         <div style={{ display: 'flex', gap: '2.5rem' }}>
-          {[['100+', 'Fabric Samples'], ['AI', 'Priority Engine'], ['Fast', 'Smart Search']].map(([num, label]) => (
+          {[['250+', 'Fabric Samples'], ['AI', 'Priority Engine'], ['Fast', 'Smart Search']].map(([num, label]) => (
             <div key={label}>
               <div style={{ fontSize: '1.3rem', fontWeight: 900, color: 'var(--white)', letterSpacing: '-0.04em' }}>{num}</div>
               <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', fontWeight: 500, letterSpacing: '0.04em' }}>{label}</div>

@@ -106,6 +106,7 @@ const INITIAL_DEMO_ENQUIRIES = [
     brand_name: 'ZARA',
     company: 'Inditex',
     country: 'Spain',
+    address: 'Inditex HQ, Arteixo, A Coruña, Spain',
     contact_person: 'Mr. David Garcia',
     email: 'david.garcia@zara.com',
     phone_number: '+34 612 345 678',
@@ -114,8 +115,6 @@ const INITIAL_DEMO_ENQUIRIES = [
     due_date: '2025-08-05',
     priority: 'High',
     requirement_type: 'Development',
-    season: 'AW 25',
-    quantity: '5000 Mtrs',
     status: 'In Progress',
     end_use: 'Shirts',
     stage: 'sent', // Request Received -> Request Approved -> Samples Sent
@@ -130,6 +129,7 @@ const INITIAL_DEMO_ENQUIRIES = [
     brand_name: 'H&M',
     company: 'Hennes & Mauritz',
     country: 'Sweden',
+    address: 'Mäster Samuelsgatan 46, Stockholm, Sweden',
     contact_person: 'Ms. Anna Lind',
     email: 'anna.lind@hm.com',
     phone_number: '+46 8 796 5500',
@@ -138,8 +138,6 @@ const INITIAL_DEMO_ENQUIRIES = [
     due_date: '2025-08-10',
     priority: 'Medium',
     requirement_type: 'Bulk Production',
-    season: 'SS 26',
-    quantity: '12000 Mtrs',
     status: 'New',
     end_use: 'Dresses',
     stage: 'received',
@@ -296,18 +294,6 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
         }}
       >
         <div>
-          <div
-            style={{
-              fontSize: '11px',
-              fontWeight: 800,
-              textTransform: 'uppercase',
-              letterSpacing: '0.12em',
-              color: '#64748b',
-              marginBottom: '0.4rem',
-            }}
-          >
-            Buyer Requirements & Tracking
-          </div>
           <h1
             style={{
               fontSize: '2rem',
@@ -317,7 +303,7 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
               lineHeight: 1.1,
             }}
           >
-            All Buyer Enquiries
+            SAMPLE ORDER TRACKING
           </h1>
         </div>
 
@@ -358,7 +344,7 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by Buyer Name, Brand, or Enquiry ID…"
+            placeholder="Search by Brand Name or Enquiry ID…"
             style={{
               width: '100%',
               padding: '0.7rem 1rem 0.7rem 2.5rem',
@@ -517,18 +503,12 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
                         letterSpacing: '-0.02em',
                       }}
                     >
-                      {enq.buyer_name}
+                      {enq.brand_name || enq.buyer_name}
                     </div>
 
                     <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#64748b' }}>
                       ID: <span style={{ color: '#0f172a' }}>{enq.enquiry_id}</span>
                     </div>
-
-                    {enq.brand_name && (
-                      <div style={{ fontSize: '0.82rem', color: '#64748b', fontWeight: 500 }}>
-                        Brand: <strong>{enq.brand_name}</strong>
-                      </div>
-                    )}
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
@@ -959,30 +939,16 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.88rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#64748b' }}>Buyer Name</label>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={editFormData.buyer_name}
-                        onChange={(e) => setEditFormData({ ...editFormData, buyer_name: e.target.value })}
-                        style={{ width: '100%', padding: '0.45rem', borderRadius: '6px', border: '1px solid #cbd5e1' }}
-                      />
-                    ) : (
-                      <span style={{ fontWeight: 700, color: '#0f172a' }}>{selectedEnquiry.buyer_name || '—'}</span>
-                    )}
-                  </div>
-
-                  <div>
                     <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#64748b' }}>Brand Name</label>
                     {isEditing ? (
                       <input
                         type="text"
-                        value={editFormData.brand_name}
-                        onChange={(e) => setEditFormData({ ...editFormData, brand_name: e.target.value })}
+                        value={editFormData.brand_name || editFormData.buyer_name}
+                        onChange={(e) => setEditFormData({ ...editFormData, brand_name: e.target.value, buyer_name: e.target.value })}
                         style={{ width: '100%', padding: '0.45rem', borderRadius: '6px', border: '1px solid #cbd5e1' }}
                       />
                     ) : (
-                      <span style={{ fontWeight: 600, color: '#334155' }}>{selectedEnquiry.brand_name || '—'}</span>
+                      <span style={{ fontWeight: 700, color: '#0f172a' }}>{selectedEnquiry.brand_name || selectedEnquiry.buyer_name || '—'}</span>
                     )}
                   </div>
 
@@ -1100,30 +1066,16 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#64748b' }}>Season</label>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#64748b' }}>Address</label>
                     {isEditing ? (
                       <input
                         type="text"
-                        value={editFormData.season}
-                        onChange={(e) => setEditFormData({ ...editFormData, season: e.target.value })}
+                        value={editFormData.address || ''}
+                        onChange={(e) => setEditFormData({ ...editFormData, address: e.target.value })}
                         style={{ width: '100%', padding: '0.45rem', borderRadius: '6px', border: '1px solid #cbd5e1' }}
                       />
                     ) : (
-                      <span style={{ color: '#334155' }}>{selectedEnquiry.season || '—'}</span>
-                    )}
-                  </div>
-
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#64748b' }}>Quantity</label>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={editFormData.quantity}
-                        onChange={(e) => setEditFormData({ ...editFormData, quantity: e.target.value })}
-                        style={{ width: '100%', padding: '0.45rem', borderRadius: '6px', border: '1px solid #cbd5e1' }}
-                      />
-                    ) : (
-                      <span style={{ color: '#334155' }}>{selectedEnquiry.quantity || '—'}</span>
+                      <span style={{ color: '#334155' }}>{selectedEnquiry.address || '—'}</span>
                     )}
                   </div>
 

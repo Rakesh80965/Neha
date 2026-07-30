@@ -3,8 +3,8 @@ import { Search, Heart, Grid, UploadCloud, PlusCircle, FileText, Layers } from '
 
 export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => {
   const navItems = [
-    { id: 'enquiry',       label: 'Enquiry Registration', icon: FileText, highlight: true },
-    { id: 'all-enquiries', label: 'All Enquiries',        icon: Layers },
+    { id: 'enquiry',       label: 'Enquiry Registration', icon: FileText },
+    { id: 'all-enquiries', label: 'Sample Order Tracking', icon: Layers },
     { id: 'search',        label: 'Smart Search',         icon: Search },
     { id: 'wishlist',      label: 'Wishlists',             icon: Heart,       badge: wishlistBadgeCount },
     { id: 'data',          label: 'All Samples',           icon: Grid },
@@ -23,30 +23,6 @@ export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => 
         flexShrink: 0,
       }}
     >
-      {/* Primary Action Button */}
-      <button
-        onClick={() => setActiveTab('enquiry')}
-        style={{
-          width: '100%',
-          padding: '0.75rem 1rem',
-          borderRadius: 'var(--radius-md)',
-          background: 'linear-gradient(135deg, #1e3a8a, #2563eb)',
-          color: '#ffffff',
-          fontWeight: 700,
-          fontSize: '0.86rem',
-          border: 'none',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.6rem',
-          marginBottom: '1.5rem',
-          boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
-          transition: 'transform 0.2s',
-        }}
-      >
-        <PlusCircle size={18} />
-        <span>+ Enquiry Registration</span>
-      </button>
 
       {/* Section label */}
       <div

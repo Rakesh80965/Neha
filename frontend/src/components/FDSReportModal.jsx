@@ -262,7 +262,7 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
               <CheckCircle size={24} color="#16a34a" />
               <div>
                 <div style={{ fontSize: '1rem', fontWeight: 800, color: '#15803d' }}>
-                  🎉 Order Finalized & Added to All Enquiries!
+                  🎉 Order Finalized & Added to Sample Order Tracking!
                 </div>
                 <div style={{ fontSize: '0.82rem', color: '#166534', marginTop: '2px' }}>
                   Live Order Tracking timeline automatically hit <strong>COMPLETED</strong> status.
@@ -518,7 +518,7 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
               className="btn-primary"
               style={{ padding: '0.7rem 1.8rem', fontSize: '0.95rem' }}
             >
-              Done & View All Enquiries
+              Done & View Sample Order Tracking
             </button>
           )}
         </div>

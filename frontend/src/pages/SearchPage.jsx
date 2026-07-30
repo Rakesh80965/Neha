@@ -71,7 +71,7 @@ export const SearchPage = ({ onOpenModal }) => {
         }}
       >
         <div style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'var(--text-dim)', marginBottom: '0.5rem' }}>
-          Intelligent Fabric Matcher
+          Sample Fabric Matcher
         </div>
         <h2
           style={{

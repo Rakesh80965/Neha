@@ -224,7 +224,7 @@ export const WishlistPage = ({ onOpenModal, wishlistData, refreshWishlist, onFin
                 Finalize Collection for {activeGroup?.group_name || 'Buyer'}
               </div>
               <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                Generate FDS Feasibility Report for all {activeSamples.length} selected fabric samples & submit to All Enquiries.
+                Generate FDS Feasibility Report for all {activeSamples.length} selected fabric samples & submit to Sample Order Tracking.
               </div>
             </div>
 
