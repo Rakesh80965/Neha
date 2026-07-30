@@ -86,9 +86,6 @@ export const WishlistPage = ({ onOpenModal, wishlistData, refreshWishlist, onFin
         }}
       >
         <div>
-          <div style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'var(--text-dim)', marginBottom: '0.5rem' }}>
-            Saved Collections
-          </div>
           <h2
             style={{
               fontSize: 'clamp(36px, 5vw, 64px)',
@@ -98,7 +95,7 @@ export const WishlistPage = ({ onOpenModal, wishlistData, refreshWishlist, onFin
               color: 'var(--charcoal)',
             }}
           >
-            Buyer<br />Wishlists
+            Shortlisted Samples
           </h2>
         </div>
 

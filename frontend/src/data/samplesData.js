@@ -102,7 +102,7 @@ export const FALLBACK_SAMPLES = [
 ];
 
 export const filterSamplesLocally = (params) => {
-  const { product_type = 'ALL', weave = 'ALL', yarn = 'ALL', blend = '', gsm_min, gsm_max, feel_terms = '' } = params;
+  const { product_type = 'ALL', weave = 'ALL', yarn = 'ALL', blend = '', finish = '', finish_type = 'ALL', gsm_min, gsm_max, feel_terms = '' } = params;
 
   let results = [...FALLBACK_SAMPLES];
 
@@ -115,9 +115,14 @@ export const filterSamplesLocally = (params) => {
   if (yarn && yarn !== 'ALL') {
     results = results.filter((s) => s.yarn && s.yarn.toUpperCase().includes(yarn.toUpperCase()));
   }
-  if (blend && blend.trim()) {
+  if (blend && blend.trim() && blend !== 'ALL') {
     const b = blend.trim().toLowerCase();
     results = results.filter((s) => s.blend && s.blend.toLowerCase().includes(b));
+  }
+  const effectiveFinish = (finish_type && finish_type !== 'ALL') ? finish_type : finish;
+  if (effectiveFinish && effectiveFinish.trim() && effectiveFinish !== 'ALL') {
+    const f = effectiveFinish.trim().toLowerCase();
+    results = results.filter((s) => s.finish && s.finish.toLowerCase().includes(f));
   }
   if (gsm_min !== undefined && gsm_min !== '') {
     const minVal = Number(gsm_min);

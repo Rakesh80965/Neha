@@ -7,7 +7,8 @@ export const SearchPage = ({ onOpenModal }) => {
   const [productType, setProductType] = useState('ALL');
   const [weave, setWeave] = useState('ALL');
   const [yarn, setYarn] = useState('ALL');
-  const [blend, setBlend] = useState('');
+  const [blend, setBlend] = useState('ALL');
+  const [finishType, setFinishType] = useState('ALL');
   const [gsmMin, setGsmMin] = useState('');
   const [gsmMax, setGsmMax] = useState('');
   const [feelTerms, setFeelTerms] = useState('');
@@ -39,7 +40,8 @@ export const SearchPage = ({ onOpenModal }) => {
     setProductType('ALL');
     setWeave('ALL');
     setYarn('ALL');
-    setBlend('');
+    setBlend('ALL');
+    setFinishType('ALL');
     setGsmMin('');
     setGsmMax('');
     setFeelTerms('');
@@ -166,13 +168,43 @@ export const SearchPage = ({ onOpenModal }) => {
               <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-dim)', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
                 Composition / Blend
               </label>
-              <input
-                type="text"
-                className="input-field"
-                placeholder="e.g., cotton, modal, viscose"
-                value={blend}
-                onChange={(e) => setBlend(e.target.value)}
-              />
+              <select className="input-field" value={blend} onChange={(e) => setBlend(e.target.value)}>
+                <option value="ALL">All Compositions / Blends</option>
+                <option value="100% COTTON">100% COTTON</option>
+                <option value="100% VISCOSE">100% VISCOSE</option>
+                <option value="100% MODAL">100% MODAL</option>
+                <option value="100% TENCEL">100% TENCEL</option>
+                <option value="100% LINEN">100% LINEN</option>
+                <option value="COTTON">COTTON (All Cotton & Blends)</option>
+                <option value="VISCOSE">VISCOSE (All Viscose & Blends)</option>
+                <option value="MODAL">MODAL (All Modal & Blends)</option>
+                <option value="TENCEL">TENCEL (All Tencel & Blends)</option>
+                <option value="LINEN">LINEN (All Linen & Blends)</option>
+                <option value="LYCRA">LYCRA (All Lycra & Blends)</option>
+                <option value="COTTON:LYCRA">COTTON / LYCRA</option>
+                <option value="COTTON:VISCOSE">COTTON / VISCOSE</option>
+                <option value="COTTON:MODAL">COTTON / MODAL</option>
+                <option value="COTTON:LINEN">COTTON / LINEN</option>
+                <option value="COTTON:TENCEL">COTTON / TENCEL</option>
+                <option value="TENCEL:LINEN">TENCEL / LINEN</option>
+              </select>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-dim)', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>
+                Finish Type
+              </label>
+              <select className="input-field" value={finishType} onChange={(e) => setFinishType(e.target.value)}>
+                <option value="ALL">All Finish Types</option>
+                <option value="SOFT TOUCH">SOFT TOUCH</option>
+                <option value="COTTON SOFT FIN">COTTON SOFT FIN</option>
+                <option value="NORMAL SOFT FIN">NORMAL SOFT FIN</option>
+                <option value="PEACH FIN HAND">PEACH FIN HAND</option>
+                <option value="EASY TO IRON">EASY TO IRON</option>
+                <option value="BRUSHED">BRUSHED</option>
+                <option value="ANTI MICROBIAL">ANTI MICROBIAL</option>
+                <option value="EASY TO IRON+CALENDER">EASY TO IRON + CALENDER</option>
+              </select>
             </div>
 
             <div>

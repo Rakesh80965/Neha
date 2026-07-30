@@ -6,7 +6,7 @@ export const Sidebar = ({ activeTab, setActiveTab, wishlistBadgeCount = 0 }) => 
     { id: 'enquiry',       label: 'Enquiry Registration', icon: FileText },
     { id: 'all-enquiries', label: 'Sample Order Tracking', icon: Layers },
     { id: 'search',        label: 'Smart Search',         icon: Search },
-    { id: 'wishlist',      label: 'Wishlists',             icon: Heart,       badge: wishlistBadgeCount },
+    { id: 'wishlist',      label: 'Shortlisted Samples',    icon: Heart,       badge: wishlistBadgeCount },
     { id: 'data',          label: 'All Samples',           icon: Grid },
     { id: 'upload',        label: 'Upload Sheet',          icon: UploadCloud },
   ];
