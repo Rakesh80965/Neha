@@ -15,32 +15,32 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://neha123-uwym.onrender.com',
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         secure: false,
       },
       '/search': {
-        target: 'https://neha123-uwym.onrender.com',
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         secure: false,
       },
       '/sample-image': {
-        target: 'https://neha123-uwym.onrender.com',
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         secure: false,
       },
       '/login': {
-        target: 'https://neha123-uwym.onrender.com',
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         secure: false,
       },
       '/register': {
-        target: 'https://neha123-uwym.onrender.com',
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         secure: false,
       },
       '/logout': {
-        target: 'https://neha123-uwym.onrender.com',
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         secure: false,
       },

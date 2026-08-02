@@ -45,6 +45,8 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
   const [parameters, setParameters] = useState(DEFAULT_PARAMETERS);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
   const has1026 = (() => {
     if (Array.isArray(samples) && samples.length > 0) {
       const match = samples.some((s) => {

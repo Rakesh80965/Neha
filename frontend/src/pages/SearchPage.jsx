@@ -71,9 +71,6 @@ export const SearchPage = ({ onOpenModal }) => {
           borderBottom: '1px solid var(--border)',
         }}
       >
-        <div style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'var(--text-dim)', marginBottom: '0.5rem' }}>
-          Sample Fabric Matcher
-        </div>
         <h2
           style={{
             fontSize: 'clamp(36px, 5vw, 64px)',
@@ -85,9 +82,6 @@ export const SearchPage = ({ onOpenModal }) => {
         >
           Smart Search
         </h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.6rem', maxWidth: '540px', lineHeight: 1.5 }}>
-          Combine construction specs with natural performance &amp; feel terms to get priority-ranked sample recommendations.
-        </p>
       </div>
 
       {/* Filter panel */}
