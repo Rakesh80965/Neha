@@ -99,7 +99,11 @@ const MainApp = () => {
           {activeTab === 'enquiry' && (
             <EnquiryRegistrationPage
               onCancel={() => setActiveTab('all-enquiries')}
-              onSavedSuccess={() => {
+              onSavedSuccess={(newEnquiry) => {
+                if (newEnquiry) {
+                  setCreatedEnquiries((prev) => [newEnquiry, ...prev]);
+                }
+                fetchWishlist();
                 setToast({ message: 'Buyer enquiry created & Wishlist Group initialized!', type: 'success' });
                 setActiveTab('all-enquiries');
               }}

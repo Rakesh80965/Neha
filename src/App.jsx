@@ -92,7 +92,11 @@ const MainApp = () => {
           {activeTab === 'enquiry' && (
             <EnquiryRegistrationPage
               onCancel={() => setActiveTab('all-enquiries')}
-              onSavedSuccess={() => {
+              onSavedSuccess={(newEnquiry) => {
+                if (newEnquiry) {
+                  setCreatedEnquiries((prev) => [newEnquiry, ...prev]);
+                }
+                fetchWishlist();
                 setToast({ message: 'Buyer enquiry created & Wishlist Group initialized!', type: 'success' });
                 setActiveTab('all-enquiries');
               }}
@@ -101,7 +105,11 @@ const MainApp = () => {
 
           {activeTab === 'all-enquiries' && (
             <div style={{ padding: '2rem' }}>
-              <AllEnquiriesPage onOpenRegistration={() => setActiveTab('enquiry')} />
+              <AllEnquiriesPage
+                onOpenRegistration={() => setActiveTab('enquiry')}
+                createdEnquiries={createdEnquiries}
+                onDeleteEnquiry={(id) => setCreatedEnquiries((prev) => prev.filter((e) => e.enquiry_id !== id))}
+              />
             </div>
           )}
 

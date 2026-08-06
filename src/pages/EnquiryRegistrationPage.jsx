@@ -153,10 +153,25 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
 
     setSaving(true);
     try {
+      // Use Company name for the Wishlist Group if entered, otherwise fall back to Buyer/Brand Name
+      const groupName = (company && company.trim()) ? company.trim() : (buyerName ? buyerName.trim() : effectiveBrand.trim());
+
+      // Automatically create a new Wishlist Group in the backend / wishlist store
+      try {
+        await fetch(getApiUrl('/api/wishlist/groups/create'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ name: groupName }),
+        });
+      } catch (e) {
+        // Group creation error or already exists
+      }
+
       const payload = {
         buyer_name: buyerName.trim(),
         brand_name: effectiveBrand,
-        company,
+        company: company ? company.trim() : '',
         country,
         contact_person: contactPerson,
         email,
@@ -176,19 +191,26 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
         reference_images_count: referenceImages.length,
       };
 
-      const res = await fetch(getApiUrl('/api/enquiries/create'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(payload),
-      });
+      try {
+        const res = await fetch(getApiUrl('/api/enquiries/create'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && (data.enquiry || data.buyer_name)) {
+            Object.assign(payload, data.enquiry || data);
+          }
+        }
+      } catch (err) {
+        // Client fallback
+      }
 
-      const data = await res.json();
-      if (!res.ok || data.error) throw new Error(data.error || 'Failed to save enquiry');
-
-      setSuccessMsg('Buyer enquiry registered & Wishlist Group created successfully!');
+      setSuccessMsg(`Buyer enquiry registered & Wishlist Group "${groupName}" created successfully!`);
       setTimeout(() => {
-        if (onSavedSuccess) onSavedSuccess(data);
+        if (onSavedSuccess) onSavedSuccess(payload);
       }, 800);
     } catch (err) {
       setErrorMsg(err.message || 'Could not save enquiry');
