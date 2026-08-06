@@ -99,54 +99,7 @@ const getStepsForEnquiry = (enq) => {
   ];
 };
 
-const INITIAL_DEMO_ENQUIRIES = [
-  {
-    enquiry_id: 'ENQ-2025-00078',
-    buyer_name: 'ZARA',
-    brand_name: 'ZARA',
-    company: 'Inditex',
-    country: 'Spain',
-    address: 'Inditex HQ, Arteixo, A Coruña, Spain',
-    contact_person: 'Mr. David Garcia',
-    email: 'david.garcia@zara.com',
-    phone_number: '+34 612 345 678',
-    buyer_id: 'B-00045',
-    date_received: '2025-07-22',
-    due_date: '2025-08-05',
-    priority: 'High',
-    requirement_type: 'Development',
-    status: 'In Progress',
-    end_use: 'Shirts',
-    stage: 'sent', // Request Received -> Request Approved -> Samples Sent
-    summary:
-      'Buyer requires a lightweight cotton fabric with premium appearance, soft hand feel, yarn dyed stripe, sustainable material, suitable for shirts. Looking for fabrics with good drape and breathability.',
-    documents: ['Buyer_Requirement.pdf', 'Tech_Pack_ZARA_AW25.pdf', 'Specifications_Sheet.pdf'],
-    reference_images_count: 3,
-  },
-  {
-    enquiry_id: 'ENQ-2025-00084',
-    buyer_name: 'H&M',
-    brand_name: 'H&M',
-    company: 'Hennes & Mauritz',
-    country: 'Sweden',
-    address: 'Mäster Samuelsgatan 46, Stockholm, Sweden',
-    contact_person: 'Ms. Anna Lind',
-    email: 'anna.lind@hm.com',
-    phone_number: '+46 8 796 5500',
-    buyer_id: 'B-00082',
-    date_received: '2025-07-24',
-    due_date: '2025-08-10',
-    priority: 'Medium',
-    requirement_type: 'Bulk Production',
-    status: 'New',
-    end_use: 'Dresses',
-    stage: 'received',
-    summary:
-      'Seeking high-density viscose twill with smooth silk-like drape for summer dress collection.',
-    documents: ['HM_SS26_Spec.pdf'],
-    reference_images_count: 2,
-  },
-];
+const INITIAL_DEMO_ENQUIRIES = [];
 
 export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) => {
   const [enquiries, setEnquiries] = useState(INITIAL_DEMO_ENQUIRIES);
