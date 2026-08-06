@@ -22,6 +22,9 @@ import {
   Share2,
   FileDown,
   Trash2,
+  History,
+  Copy,
+  PlusCircle,
 } from 'lucide-react';
 import { getApiUrl } from '../config';
 import { OrderTracking } from '../components/ui/order-tracking';
@@ -102,16 +105,109 @@ const getStepsForEnquiry = (enq) => {
 
 const INITIAL_DEMO_ENQUIRIES = [];
 
-export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [], onDeleteEnquiry }) => {
+const INITIAL_PAST_ENQUIRIES = [
+  {
+    enquiry_id: 'ENQ-2025-00042',
+    buyer_name: 'ZARA',
+    brand_name: 'ZARA',
+    company: 'Inditex',
+    country: 'Spain',
+    address: 'Inditex HQ, Arteixo, A Coruña, Spain',
+    contact_person: 'Mr. David Garcia',
+    email: 'david.garcia@zara.com',
+    phone_number: '+34 612 345 678',
+    buyer_id: 'B-00045',
+    date_received: '2025-06-10',
+    due_date: '2025-06-25',
+    priority: 'High',
+    requirement_type: 'Development',
+    status: 'Completed',
+    end_use: 'Shirts',
+    stage: 'completed',
+    summary: 'Buyer required lightweight cotton fabric with soft hand feel, yarn dyed stripe, sustainable material suitable for shirts.',
+    documents: ['Buyer_Requirement.pdf', 'Tech_Pack_ZARA.pdf'],
+    reference_images_count: 2,
+    isHistory: true,
+  },
+  {
+    enquiry_id: 'ENQ-2025-00055',
+    buyer_name: 'H&M',
+    brand_name: 'H&M',
+    company: 'Hennes & Mauritz',
+    country: 'Sweden',
+    address: 'Mäster Samuelsgatan 46, Stockholm, Sweden',
+    contact_person: 'Ms. Anna Lind',
+    email: 'anna.lind@hm.com',
+    phone_number: '+46 8 796 5500',
+    buyer_id: 'B-00082',
+    date_received: '2025-06-15',
+    due_date: '2025-07-01',
+    priority: 'Medium',
+    requirement_type: 'Bulk Production',
+    status: 'Completed',
+    end_use: 'Dresses',
+    stage: 'completed',
+    summary: 'High-density viscose twill with smooth silk-like drape for summer dress collection.',
+    documents: ['HM_SS26_Spec.pdf'],
+    reference_images_count: 1,
+    isHistory: true,
+  },
+];
+
+export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [], onDeleteEnquiry, onNewEnquiryCreated }) => {
   const [enquiries, setEnquiries] = useState(INITIAL_DEMO_ENQUIRIES);
+  const [pastEnquiries, setPastEnquiries] = useState(INITIAL_PAST_ENQUIRIES);
+  const [viewTab, setViewTab] = useState('active'); // 'active' | 'history'
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStageFilter, setSelectedStageFilter] = useState('ALL');
   const [selectedEnquiry, setSelectedEnquiry] = useState(null);
   const [activeShareEnquiry, setActiveShareEnquiry] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editFormData, setEditFormData] = useState(null);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState('');
+  const [successNotification, setSuccessNotification] = useState('');
+
+  const handleDuplicateEnquiry = async (sourceEnquiry, e) => {
+    if (e) e.stopPropagation();
+    const newEnquiryId = 'ENQ-2025-' + String(Math.floor(10000 + Math.random() * 90000)).padStart(5, '0');
+    const todayStr = getCurrentFormattedTime();
+
+    const newEnq = {
+      ...sourceEnquiry,
+      enquiry_id: newEnquiryId,
+      date_received: todayStr.split(' ')[0] || new Date().toISOString().split('T')[0],
+      due_date: '',
+      stage: 'received',
+      status: 'New',
+      stageTimestamps: {
+        received: todayStr,
+      },
+      isHistory: false,
+    };
+
+    setEnquiries((prev) => [newEnq, ...prev]);
+    if (onNewEnquiryCreated) {
+      onNewEnquiryCreated(newEnq);
+    }
+
+    const groupName = (sourceEnquiry.company && sourceEnquiry.company.trim()) ? sourceEnquiry.company.trim() : (sourceEnquiry.buyer_name || sourceEnquiry.brand_name);
+    try {
+      await fetch(getApiUrl('/api/wishlist/groups/create'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ name: groupName }),
+      });
+    } catch (err) {
+      // Ignore fallback
+    }
+
+    setSelectedEnquiry(null);
+    setViewTab('active');
+    triggerCelebration();
+    setSuccessNotification(`New enquiry created with same details from ${sourceEnquiry.buyer_name || sourceEnquiry.brand_name}! (ID: ${newEnquiryId})`);
+    setTimeout(() => setSuccessNotification(''), 4500);
+  };
 
   const handleDeleteEnquiry = async (enquiryId) => {
     if (!window.confirm('Are you sure you want to delete this enquiry? This action cannot be undone.')) {
@@ -237,16 +333,22 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [], on
     }
   };
 
-  const filteredEnquiries = enquiries.filter((enq) => {
-    const matchesSearch =
-      enq.buyer_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      enq.enquiry_id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (enq.brand_name && enq.brand_name.toLowerCase().includes(searchQuery.toLowerCase()));
+  const activeList = enquiries.filter((e) => e.stage !== 'completed');
+  const historyList = [
+    ...pastEnquiries,
+    ...enquiries.filter((e) => e.stage === 'completed'),
+  ];
 
-    const matchesStage =
-      selectedStageFilter === 'ALL' || enq.stage === selectedStageFilter;
+  const currentDisplayList = viewTab === 'history' ? historyList : activeList;
 
-    return matchesSearch && matchesStage;
+  const filteredEnquiries = currentDisplayList.filter((enq) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      (enq.buyer_name && enq.buyer_name.toLowerCase().includes(query)) ||
+      (enq.enquiry_id && enq.enquiry_id.toLowerCase().includes(query)) ||
+      (enq.brand_name && enq.brand_name.toLowerCase().includes(query)) ||
+      (enq.company && enq.company.toLowerCase().includes(query))
+    );
   });
 
   return (
@@ -304,6 +406,28 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [], on
         )}
       </div>
 
+      {/* Success Notification Banner */}
+      {successNotification && (
+        <div
+          style={{
+            padding: '0.9rem 1.4rem',
+            borderRadius: '12px',
+            background: 'linear-gradient(135deg, #10b981, #059669)',
+            color: '#ffffff',
+            fontWeight: 700,
+            fontSize: '0.92rem',
+            marginBottom: '1.5rem',
+            boxShadow: '0 4px 16px rgba(16, 185, 129, 0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.6rem',
+          }}
+        >
+          <CheckCircle size={20} />
+          <span>{successNotification}</span>
+        </div>
+      )}
+
       {/* Search & Filter Bar */}
       <div
         style={{
@@ -320,7 +444,7 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [], on
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by Brand Name or Enquiry ID…"
+            placeholder="Search by Brand Name, Company or Enquiry ID…"
             style={{
               width: '100%',
               padding: '0.7rem 1rem 0.7rem 2.5rem',
@@ -339,70 +463,50 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [], on
           />
         </div>
 
-        {/* Filter Pills */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+        {/* View Mode Buttons: Active Enquiries vs History */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
           <button
-            onClick={() => setSelectedStageFilter('ALL')}
+            onClick={() => setViewTab('active')}
             style={{
-              padding: '0.5rem 1rem',
+              padding: '0.6rem 1.25rem',
               borderRadius: '20px',
-              fontSize: '0.82rem',
+              fontSize: '0.86rem',
               fontWeight: 700,
               cursor: 'pointer',
-              border: selectedStageFilter === 'ALL' ? '1.5px solid #0f172a' : '1px solid #cbd5e1',
-              background: selectedStageFilter === 'ALL' ? '#0f172a' : '#ffffff',
-              color: selectedStageFilter === 'ALL' ? '#ffffff' : '#475569',
+              border: viewTab === 'active' ? '1.5px solid #0f172a' : '1px solid #cbd5e1',
+              background: viewTab === 'active' ? '#0f172a' : '#ffffff',
+              color: viewTab === 'active' ? '#ffffff' : '#475569',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.45rem',
               transition: 'all 0.2s',
             }}
           >
-            All Stages ({enquiries.length})
+            <Layers size={16} />
+            <span>Active Enquiries ({activeList.length})</span>
           </button>
 
-          {WORKFLOW_STAGES.map((stg) => {
-            const count = enquiries.filter((e) => e.stage === stg.id).length;
-            const isSel = selectedStageFilter === stg.id;
-            return (
-              <button
-                key={stg.id}
-                onClick={() => setSelectedStageFilter(stg.id)}
-                style={{
-                  padding: '0.5rem 0.95rem',
-                  borderRadius: '20px',
-                  fontSize: '0.82rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  border: isSel ? `1.5px solid ${stg.color}` : '1px solid #cbd5e1',
-                  background: isSel ? `${stg.color}15` : '#ffffff',
-                  color: isSel ? stg.color : '#475569',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  transition: 'all 0.2s',
-                }}
-              >
-                <span
-                  style={{
-                    width: '7px',
-                    height: '7px',
-                    borderRadius: '50%',
-                    background: stg.color,
-                  }}
-                />
-                <span>{stg.label}</span>
-                <span
-                  style={{
-                    fontSize: '11px',
-                    background: '#f1f5f9',
-                    padding: '1px 6px',
-                    borderRadius: '10px',
-                    fontWeight: 700,
-                  }}
-                >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
+          <button
+            onClick={() => setViewTab('history')}
+            style={{
+              padding: '0.6rem 1.25rem',
+              borderRadius: '20px',
+              fontSize: '0.86rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              border: viewTab === 'history' ? '1.5px solid #2563eb' : '1px solid #cbd5e1',
+              background: viewTab === 'history' ? '#2563eb' : '#ffffff',
+              color: viewTab === 'history' ? '#ffffff' : '#475569',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+              transition: 'all 0.2s',
+              boxShadow: viewTab === 'history' ? '0 4px 14px rgba(37, 99, 235, 0.25)' : 'none',
+            }}
+          >
+            <History size={16} />
+            <span>History ({historyList.length})</span>
+          </button>
         </div>
       </div>
 
@@ -488,6 +592,30 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [], on
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+                    {/* New Enquiry button to clone details */}
+                    <button
+                      onClick={(e) => handleDuplicateEnquiry(enq, e)}
+                      style={{
+                        padding: '0.35rem 0.85rem',
+                        borderRadius: '6px',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        background: 'linear-gradient(135deg, #1e3a8a, #2563eb)',
+                        color: '#ffffff',
+                        border: 'none',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        boxShadow: '0 2px 8px rgba(37, 99, 235, 0.25)',
+                        transition: 'all 0.2s',
+                      }}
+                      title="Create a new enquiry with the exact same details"
+                    >
+                      <Copy size={13} />
+                      <span>+ New Enquiry</span>
+                    </button>
+
                     {enq.fds_report && (
                       <span
                         style={{
@@ -1180,26 +1308,47 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [], on
                   </button>
                 </div>
               ) : (
-                <button
-                  onClick={() => setIsEditing(true)}
-                  style={{
-                    padding: '0.65rem 1.45rem',
-                    borderRadius: '8px',
-                    border: 'none',
-                    background: 'linear-gradient(135deg, #1e3a8a, #2563eb)',
-                    color: '#ffffff',
-                    fontWeight: 700,
-                    fontSize: '0.88rem',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                    boxShadow: '0 4px 12px rgba(37, 99, 235, 0.2)',
-                  }}
-                >
-                  <Edit3 size={16} />
-                  <span>Edit Enquiry Details</span>
-                </button>
+                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                  <button
+                    onClick={(e) => handleDuplicateEnquiry(selectedEnquiry, e)}
+                    style={{
+                      padding: '0.65rem 1.35rem',
+                      borderRadius: '8px',
+                      border: 'none',
+                      background: 'linear-gradient(135deg, #1e3a8a, #2563eb)',
+                      color: '#ffffff',
+                      fontWeight: 700,
+                      fontSize: '0.88rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      boxShadow: '0 4px 12px rgba(37, 99, 235, 0.2)',
+                    }}
+                  >
+                    <Copy size={16} />
+                    <span>+ New Enquiry (Same Details)</span>
+                  </button>
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    style={{
+                      padding: '0.65rem 1.35rem',
+                      borderRadius: '8px',
+                      border: '1px solid #cbd5e1',
+                      background: '#ffffff',
+                      color: '#334155',
+                      fontWeight: 600,
+                      fontSize: '0.88rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                    }}
+                  >
+                    <Edit3 size={16} />
+                    <span>Edit Details</span>
+                  </button>
+                </div>
               )}
             </div>
           </div>

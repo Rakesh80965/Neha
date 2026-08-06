@@ -19,6 +19,8 @@ import {
   ChevronRight,
   Filter,
   Trash2,
+  History,
+  Copy,
 } from 'lucide-react';
 import { getApiUrl } from '../config';
 
@@ -32,15 +34,89 @@ const WORKFLOW_STAGES = [
 
 const INITIAL_DEMO_ENQUIRIES = [];
 
-export const AllEnquiriesPage = ({ onOpenRegistration, onDeleteEnquiry }) => {
+const INITIAL_PAST_ENQUIRIES = [
+  {
+    enquiry_id: 'ENQ-2025-00042',
+    buyer_name: 'ZARA',
+    brand_name: 'ZARA',
+    company: 'Inditex',
+    country: 'Spain',
+    address: 'Inditex HQ, Arteixo, A Coruña, Spain',
+    contact_person: 'Mr. David Garcia',
+    email: 'david.garcia@zara.com',
+    phone_number: '+34 612 345 678',
+    buyer_id: 'B-00045',
+    date_received: '2025-06-10',
+    due_date: '2025-06-25',
+    priority: 'High',
+    requirement_type: 'Development',
+    status: 'Completed',
+    end_use: 'Shirts',
+    stage: 'completed',
+    summary: 'Buyer required lightweight cotton fabric with soft hand feel, yarn dyed stripe, sustainable material suitable for shirts.',
+    documents: ['Buyer_Requirement.pdf', 'Tech_Pack_ZARA.pdf'],
+    reference_images_count: 2,
+    isHistory: true,
+  },
+  {
+    enquiry_id: 'ENQ-2025-00055',
+    buyer_name: 'H&M',
+    brand_name: 'H&M',
+    company: 'Hennes & Mauritz',
+    country: 'Sweden',
+    address: 'Mäster Samuelsgatan 46, Stockholm, Sweden',
+    contact_person: 'Ms. Anna Lind',
+    email: 'anna.lind@hm.com',
+    phone_number: '+46 8 796 5500',
+    buyer_id: 'B-00082',
+    date_received: '2025-06-15',
+    due_date: '2025-07-01',
+    priority: 'Medium',
+    requirement_type: 'Bulk Production',
+    status: 'Completed',
+    end_use: 'Dresses',
+    stage: 'completed',
+    summary: 'High-density viscose twill with smooth silk-like drape for summer dress collection.',
+    documents: ['HM_SS26_Spec.pdf'],
+    reference_images_count: 1,
+    isHistory: true,
+  },
+];
+
+export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [], onDeleteEnquiry, onNewEnquiryCreated }) => {
   const [enquiries, setEnquiries] = useState(INITIAL_DEMO_ENQUIRIES);
+  const [pastEnquiries, setPastEnquiries] = useState(INITIAL_PAST_ENQUIRIES);
+  const [viewTab, setViewTab] = useState('active');
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStageFilter, setSelectedStageFilter] = useState('ALL');
   const [selectedEnquiry, setSelectedEnquiry] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editFormData, setEditFormData] = useState(null);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState('');
+
+  const handleDuplicateEnquiry = async (sourceEnquiry, e) => {
+    if (e) e.stopPropagation();
+    const newEnquiryId = 'ENQ-2025-' + String(Math.floor(10000 + Math.random() * 90000)).padStart(5, '0');
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    const newEnq = {
+      ...sourceEnquiry,
+      enquiry_id: newEnquiryId,
+      date_received: todayStr,
+      due_date: '',
+      stage: 'received',
+      status: 'New',
+      isHistory: false,
+    };
+
+    setEnquiries((prev) => [newEnq, ...prev]);
+    if (onNewEnquiryCreated) {
+      onNewEnquiryCreated(newEnq);
+    }
+
+    setSelectedEnquiry(null);
+    setViewTab('active');
+  };
 
   const handleDeleteEnquiry = async (enquiryId) => {
     if (!window.confirm('Are you sure you want to delete this enquiry? This action cannot be undone.')) {
@@ -250,70 +326,50 @@ export const AllEnquiriesPage = ({ onOpenRegistration, onDeleteEnquiry }) => {
           />
         </div>
 
-        {/* Filter Pills */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+        {/* View Mode Buttons: Active Enquiries vs History */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
           <button
-            onClick={() => setSelectedStageFilter('ALL')}
+            onClick={() => setViewTab('active')}
             style={{
-              padding: '0.5rem 1rem',
+              padding: '0.6rem 1.25rem',
               borderRadius: '20px',
-              fontSize: '0.82rem',
+              fontSize: '0.86rem',
               fontWeight: 700,
               cursor: 'pointer',
-              border: selectedStageFilter === 'ALL' ? '1.5px solid #0f172a' : '1px solid #cbd5e1',
-              background: selectedStageFilter === 'ALL' ? '#0f172a' : '#ffffff',
-              color: selectedStageFilter === 'ALL' ? '#ffffff' : '#475569',
+              border: viewTab === 'active' ? '1.5px solid #0f172a' : '1px solid #cbd5e1',
+              background: viewTab === 'active' ? '#0f172a' : '#ffffff',
+              color: viewTab === 'active' ? '#ffffff' : '#475569',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.45rem',
               transition: 'all 0.2s',
             }}
           >
-            All Stages ({enquiries.length})
+            <Layers size={16} />
+            <span>Active Enquiries</span>
           </button>
 
-          {WORKFLOW_STAGES.map((stg) => {
-            const count = enquiries.filter((e) => e.stage === stg.id).length;
-            const isSel = selectedStageFilter === stg.id;
-            return (
-              <button
-                key={stg.id}
-                onClick={() => setSelectedStageFilter(stg.id)}
-                style={{
-                  padding: '0.5rem 0.95rem',
-                  borderRadius: '20px',
-                  fontSize: '0.82rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  border: isSel ? `1.5px solid ${stg.color}` : '1px solid #cbd5e1',
-                  background: isSel ? `${stg.color}15` : '#ffffff',
-                  color: isSel ? stg.color : '#475569',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  transition: 'all 0.2s',
-                }}
-              >
-                <span
-                  style={{
-                    width: '7px',
-                    height: '7px',
-                    borderRadius: '50%',
-                    background: stg.color,
-                  }}
-                />
-                <span>{stg.label}</span>
-                <span
-                  style={{
-                    fontSize: '11px',
-                    background: '#f1f5f9',
-                    padding: '1px 6px',
-                    borderRadius: '10px',
-                    fontWeight: 700,
-                  }}
-                >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
+          <button
+            onClick={() => setViewTab('history')}
+            style={{
+              padding: '0.6rem 1.25rem',
+              borderRadius: '20px',
+              fontSize: '0.86rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              border: viewTab === 'history' ? '1.5px solid #2563eb' : '1px solid #cbd5e1',
+              background: viewTab === 'history' ? '#2563eb' : '#ffffff',
+              color: viewTab === 'history' ? '#ffffff' : '#475569',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+              transition: 'all 0.2s',
+              boxShadow: viewTab === 'history' ? '0 4px 14px rgba(37, 99, 235, 0.25)' : 'none',
+            }}
+          >
+            <History size={16} />
+            <span>History</span>
+          </button>
         </div>
       </div>
 
