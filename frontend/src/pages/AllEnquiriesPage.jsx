@@ -21,6 +21,7 @@ import {
   Filter,
   Share2,
   FileDown,
+  Trash2,
 } from 'lucide-react';
 import { getApiUrl } from '../config';
 import { OrderTracking } from '../components/ui/order-tracking';
@@ -101,7 +102,7 @@ const getStepsForEnquiry = (enq) => {
 
 const INITIAL_DEMO_ENQUIRIES = [];
 
-export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) => {
+export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [], onDeleteEnquiry }) => {
   const [enquiries, setEnquiries] = useState(INITIAL_DEMO_ENQUIRIES);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -111,6 +112,28 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
   const [isEditing, setIsEditing] = useState(false);
   const [editFormData, setEditFormData] = useState(null);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState('');
+
+  const handleDeleteEnquiry = async (enquiryId) => {
+    if (!window.confirm('Are you sure you want to delete this enquiry? This action cannot be undone.')) {
+      return;
+    }
+    setEnquiries((prev) => prev.filter((enq) => enq.enquiry_id !== enquiryId));
+    if (onDeleteEnquiry) {
+      onDeleteEnquiry(enquiryId);
+    }
+    setSelectedEnquiry(null);
+
+    try {
+      await fetch(getApiUrl('/api/enquiries/delete'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ enquiry_id: enquiryId }),
+      });
+    } catch (err) {
+      // Ignore API failure gracefully
+    }
+  };
 
   const fetchEnquiries = async () => {
     try {
@@ -1078,23 +1101,45 @@ export const AllEnquiriesPage = ({ onOpenRegistration, createdEnquiries = [] }) 
               <TestReport1026Component />
             )}
 
-            {/* Bottom Actions Bar with Edit Button */}
+            {/* Bottom Actions Bar with Edit & Delete Buttons */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #e2e8f0', paddingTop: '1.5rem', marginTop: '1.5rem' }}>
-              <button
-                onClick={() => setSelectedEnquiry(null)}
-                style={{
-                  padding: '0.65rem 1.35rem',
-                  borderRadius: '8px',
-                  border: '1px solid #cbd5e1',
-                  background: '#ffffff',
-                  color: '#475569',
-                  fontWeight: 600,
-                  fontSize: '0.88rem',
-                  cursor: 'pointer',
-                }}
-              >
-                Close
-              </button>
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <button
+                  onClick={() => setSelectedEnquiry(null)}
+                  style={{
+                    padding: '0.65rem 1.35rem',
+                    borderRadius: '8px',
+                    border: '1px solid #cbd5e1',
+                    background: '#ffffff',
+                    color: '#475569',
+                    fontWeight: 600,
+                    fontSize: '0.88rem',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Close
+                </button>
+                <button
+                  onClick={() => handleDeleteEnquiry(selectedEnquiry.enquiry_id)}
+                  style={{
+                    padding: '0.65rem 1.25rem',
+                    borderRadius: '8px',
+                    border: '1px solid #fecaca',
+                    background: '#fef2f2',
+                    color: '#dc2626',
+                    fontWeight: 600,
+                    fontSize: '0.88rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  <Trash2 size={16} />
+                  <span>Delete</span>
+                </button>
+              </div>
 
               {isEditing ? (
                 <div style={{ display: 'flex', gap: '0.75rem' }}>

@@ -111,6 +111,7 @@ const MainApp = () => {
               <AllEnquiriesPage
                 onOpenRegistration={() => setActiveTab('enquiry')}
                 createdEnquiries={createdEnquiries}
+                onDeleteEnquiry={(id) => setCreatedEnquiries((prev) => prev.filter((e) => e.enquiry_id !== id))}
               />
             </div>
           )}
