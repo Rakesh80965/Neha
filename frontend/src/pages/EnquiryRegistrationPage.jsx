@@ -184,6 +184,7 @@ export const EnquiryRegistrationPage = ({ onCancel, onSavedSuccess }) => {
         end_use: endUse,
         summary,
         documents: documents.map((d) => d.name),
+        reference_images: referenceImages,
         reference_images_count: referenceImages.length,
       };
 

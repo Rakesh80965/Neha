@@ -6,41 +6,69 @@ import { ShareModal } from './ShareModal';
 import { TestReport1026Component } from './TestReport1026Component';
 
 const DEFAULT_PARAMETERS = [
-  { name: 'FABRIC WEIGHT', method: 'ISO 3801', custReq: '+/-5%', nslCommit: '+/-5%', remarks: '' },
-  { name: 'YARN COUNT', method: 'ISO 7221-5', custReq: '+/-5%', nslCommit: '+/-5%', remarks: '' },
-  { name: 'CONSTRUCTION', method: 'EN 1049-2', custReq: '+/-5%', nslCommit: '+/-5%', remarks: '' },
-  { name: 'FABRIC WIDTH', method: 'IHM', custReq: '-', nslCommit: '+/-1"', remarks: '' },
-  { name: 'FIBER CONTENT', method: 'AATCC20/20A:2018', custReq: '-', nslCommit: '100% COTTON', remarks: '' },
-  { name: 'DIMENSIONAL STABILITY', method: 'ISO 6330', custReq: '+1 TO -3%', nslCommit: '+1 TO -5%', remarks: 'MILL WILL BE RESPONSIBLE FOR HOME LAUNDRY ONLY' },
-  { name: 'TEAR STRENGTH', method: 'ISO 13937-1', custReq: '1.0 KGF', nslCommit: '1.0 KGF', remarks: '' },
-  { name: 'TENSILE STRENGTH', method: 'ISO 13934-2', custReq: '16 KGF', nslCommit: 'WARP:16 KGF , WEFT: 9 KGF', remarks: '' },
-  { name: 'SEAM SLIPPAGE', method: 'ISO 13936-1', custReq: '6MM @ 10 KGF', nslCommit: '6MM @ 8 KGF', remarks: '' },
-  { name: 'SEAM STRENGTH', method: 'ISO 13935-2', custReq: '6MM @ 14 KGF', nslCommit: '6MM @ 12 KGF', remarks: '' },
-  { name: 'BOW', method: 'ASTM D 3882', custReq: '-', nslCommit: '3.0%', remarks: '' },
-  { name: 'SKEW', method: 'ASTM D 3882', custReq: '-', nslCommit: '4.0%', remarks: 'AFTERWASH SKEWMOVEMENT WILL BE 5%-6%(AATCC 179)' },
-  { name: 'PH VALUE', method: 'ISO 3071', custReq: '4.0 - 7.5', nslCommit: '4.0 - 7.5', remarks: '' },
-  { name: 'CF TO WASHING', method: 'ISO 105 C06', custReq: 'CC:4,CS:4,SS:4-5', nslCommit: 'CC:4,CS:4, DK COLORS 3-4,SS:4-5', remarks: '' },
-  { name: 'CF TO RUBBING-DRY', method: 'ISO 105 X12', custReq: '4-5,DARK COLORS:4', nslCommit: '4, DARK SHADES :3-4', remarks: '' },
-  { name: 'CF TO RUBBING-WET', method: 'ISO 105 X12', custReq: '4,DARK COLORS:3-4', nslCommit: '3, DARK SHADES:2-3', remarks: '' },
-  { name: 'CF TO PERSPIRATION', method: 'ISO 105 E04', custReq: 'CC:4,CS:4,SS:4-5', nslCommit: 'CC:4,CS:4, DK COLORS 3-4,SS:4-5', remarks: 'FOR ALL OVER PRINT ONLY' },
-  { name: 'CF TO WATER', method: 'ISO 105 E01', custReq: '-', nslCommit: 'CC:4,CS:4, DK COLORS 3-4,SS:4-5', remarks: '' },
-  { name: 'CF TO LIGHT', method: 'ISO 105 B02', custReq: '4', nslCommit: 'LIGHT SHADES:3 / OTHERS:3-4', remarks: '(SPECIALLY ON FLUOROCENT DYE - IF REQUIRED)' },
+  { name: 'FABRIC WEIGHT', method: 'ISO 3801', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'YARN COUNT', method: 'ISO 7221-5', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'CONSTRUCTION', method: 'EN 1049-2', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'FABRIC WIDTH', method: 'IHM', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'FIBER CONTENT', method: 'AATCC20/20A:2018', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'DIMENSIONAL STABILITY', method: 'ISO 6330', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'TEAR STRENGTH', method: 'ISO 13937-1', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'TENSILE STRENGTH', method: 'ISO 13934-2', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'SEAM SLIPPAGE', method: 'ISO 13936-1', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'SEAM STRENGTH', method: 'ISO 13935-2', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'BOW', method: 'ASTM D 3882', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'SKEW', method: 'ASTM D 3882', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'PH VALUE', method: 'ISO 3071', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'CF TO WASHING', method: 'ISO 105 C06', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'CF TO RUBBING-DRY', method: 'ISO 105 X12', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'CF TO RUBBING-WET', method: 'ISO 105 X12', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'CF TO PERSPIRATION', method: 'ISO 105 E04', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'CF TO WATER', method: 'ISO 105 E01', custReq: '', nslCommit: '', remarks: '' },
+  { name: 'CF TO LIGHT', method: 'ISO 105 B02', custReq: '', nslCommit: '', remarks: '' },
 ];
 
-export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess }) => {
+export const FDSReportModal = ({ group, samples = [], createdEnquiries = [], onClose, onFinalizeSuccess }) => {
   const primarySample = samples[0] || {};
 
-  const [fdsNo, setFdsNo] = useState(`NSL-FDS-0000${Math.floor(1000 + Math.random() * 9000)}`);
-  const [dateStr, setDateStr] = useState(new Date().toISOString().slice(0, 10).split('-').reverse().join('.'));
-  const [endBuyer, setEndBuyer] = useState(group?.group_name || 'BENETTON INDIA');
+  const matchedEnquiry = (createdEnquiries || []).find((e) => {
+    if (!e) return false;
+    const gName = (group?.group_name || '').toLowerCase();
+    const bName = (e.buyer_name || '').toLowerCase();
+    const brName = (e.brand_name || '').toLowerCase();
+    const cName = (e.company || '').toLowerCase();
+    return gName === bName || gName === brName || gName === cName || gName.includes(bName) || (bName && bName.includes(gName));
+  }) || (group?.enquiry || null);
+
+  const [fdsNo, setFdsNo] = useState(() =>
+    matchedEnquiry?.enquiry_id ? `NSL-${matchedEnquiry.enquiry_id}` : `NSL-FDS-0000${Math.floor(1000 + Math.random() * 9000)}`
+  );
+  const [dateStr, setDateStr] = useState(() =>
+    matchedEnquiry?.date_received || new Date().toISOString().slice(0, 10).split('-').reverse().join('.')
+  );
+  const [endBuyer, setEndBuyer] = useState(() =>
+    matchedEnquiry?.company
+      ? `${matchedEnquiry.buyer_name} (${matchedEnquiry.company})`
+      : (matchedEnquiry?.buyer_name || group?.group_name || '')
+  );
+
+  // Detailed Buyer Information States (Carried over from Enquiry Registration or editable here)
+  const [brandName, setBrandName] = useState(() => matchedEnquiry?.brand_name || matchedEnquiry?.buyer_name || group?.group_name || '');
+  const [companyName, setCompanyName] = useState(() => matchedEnquiry?.company || '');
+  const [contactPerson, setContactPerson] = useState(() => matchedEnquiry?.contact_person || '');
+  const [email, setEmail] = useState(() => matchedEnquiry?.email || '');
+  const [phone, setPhone] = useState(() => matchedEnquiry?.phone_number || '');
+  const [country, setCountry] = useState(() => matchedEnquiry?.country || '');
+  const [requirementType, setRequirementType] = useState(() => matchedEnquiry?.requirement_type || 'Development');
+  const [summaryText, setSummaryText] = useState(() => matchedEnquiry?.summary || '');
+
   const [quality, setQuality] = useState(
     primarySample.construction
-      ? `${primarySample.count || '20CMP*2'}/${primarySample.construction}/${primarySample.weave || 'TWILL'}`
-      : '20CMP*2/40CMPTFO/68*58/58"/TWILL-2/2/YD'
+      ? `${primarySample.count || ''}/${primarySample.construction}/${primarySample.weave || ''}`
+      : ''
   );
-  const [finishType, setFinishType] = useState(primarySample.finish || 'BRUSHED FACE SIDE');
-  const [printStyle, setPrintStyle] = useState(primarySample.article || 'YY025K0828 & 829');
-  const [fabricWeight, setFabricWeight] = useState(`${primarySample.gsm || 162}+/-5%`);
+  const [finishType, setFinishType] = useState(primarySample.finish || '');
+  const [printStyle, setPrintStyle] = useState(primarySample.article || '');
+  const [fabricWeight, setFabricWeight] = useState(primarySample.gsm ? `${primarySample.gsm} GSM` : '');
 
   const [parameters, setParameters] = useState(DEFAULT_PARAMETERS);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -125,13 +153,19 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
     triggerCelebration();
 
     const finalizedEnquiry = {
-      enquiry_id: `ENQ-FDS-${fdsNo}`,
-      buyer_name: endBuyer,
-      brand_name: endBuyer,
-      date_received: new Date().toISOString().slice(0, 10),
+      enquiry_id: matchedEnquiry?.enquiry_id || `ENQ-FDS-${fdsNo}`,
+      buyer_name: brandName || endBuyer,
+      brand_name: brandName || endBuyer,
+      company: companyName || '',
+      contact_person: contactPerson || '',
+      email: email || '',
+      phone_number: phone || '',
+      country: country || '',
+      requirement_type: requirementType || 'Development',
+      date_received: dateStr,
       due_date: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
-      priority: 'High',
-      stage: 'completed', // Live order tracking automatically completed!
+      priority: matchedEnquiry?.priority || 'High',
+      stage: 'completed',
       stageTimestamps: {
         received: `${new Date().toISOString().slice(0, 10)} 09:00`,
         approved: `${new Date().toISOString().slice(0, 10)} 11:00`,
@@ -139,12 +173,13 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
         buyer_approved: `${new Date().toISOString().slice(0, 10)} 15:00`,
         completed: `${new Date().toISOString().slice(0, 10)} 16:30`,
       },
-      summary: `Finalized FDS Feasibility Order for ${endBuyer}. Includes ${samples.length} selected fabric samples: ${samples.map((s) => `#${s.sample_no}`).join(', ')}.`,
+      summary: summaryText || matchedEnquiry?.summary || `Finalized FDS Feasibility Order for ${brandName || endBuyer}. Includes ${samples.length} selected fabric samples.`,
+      reference_images: matchedEnquiry?.reference_images || [],
       selected_samples: samples,
       fds_report: {
         fdsNo,
         dateStr,
-        endBuyer,
+        endBuyer: brandName || endBuyer,
         quality,
         finishType,
         printStyle,
@@ -324,10 +359,123 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
 
         {/* ONE COMBINED PRINTABLE AREA FOR THE ENTIRE PDF DOCUMENT */}
         <div id="fds-report-printable-area" style={{ border: '2px solid #0f172a', borderRadius: '6px', background: '#ffffff', padding: '1.25rem' }}>
-          {/* Selected Fabric Samples Gallery */}
+          
+          {/* 1. REGISTERED BUYER & ENQUIRY INFORMATION */}
+          <div style={{ marginBottom: '1.25rem', background: '#f8fafc', borderRadius: '8px', padding: '1rem', border: '1px solid #cbd5e1' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#1e3a8a', marginBottom: '0.65rem' }}>
+              1. Buyer Registration & Contact Details ({fdsNo})
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', fontSize: '0.8rem', color: '#334155' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#64748b', marginBottom: '2px' }}>Brand / Buyer Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. ZARA, Calvin Klein"
+                  value={brandName}
+                  onChange={(e) => setBrandName(e.target.value)}
+                  style={{ width: '100%', padding: '4px 6px', borderRadius: '4px', border: '1px solid #cbd5e1', fontWeight: 700, fontSize: '0.82rem' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#64748b', marginBottom: '2px' }}>Company</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Inditex"
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  style={{ width: '100%', padding: '4px 6px', borderRadius: '4px', border: '1px solid #cbd5e1', fontSize: '0.8rem' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#64748b', marginBottom: '2px' }}>Contact Person</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Neha"
+                  value={contactPerson}
+                  onChange={(e) => setContactPerson(e.target.value)}
+                  style={{ width: '100%', padding: '4px 6px', borderRadius: '4px', border: '1px solid #cbd5e1', fontWeight: 700, fontSize: '0.8rem', color: '#0f172a' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#64748b', marginBottom: '2px' }}>Email</label>
+                <input
+                  type="email"
+                  placeholder="e.g. neha@zara.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  style={{ width: '100%', padding: '4px 6px', borderRadius: '4px', border: '1px solid #cbd5e1', fontSize: '0.8rem' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#64748b', marginBottom: '2px' }}>Phone Number</label>
+                <input
+                  type="text"
+                  placeholder="e.g. +91 9876543210"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  style={{ width: '100%', padding: '4px 6px', borderRadius: '4px', border: '1px solid #cbd5e1', fontSize: '0.8rem' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#64748b', marginBottom: '2px' }}>Country</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Spain, India"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  style={{ width: '100%', padding: '4px 6px', borderRadius: '4px', border: '1px solid #cbd5e1', fontSize: '0.8rem' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#64748b', marginBottom: '2px' }}>Requirement Type</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Development, Sampling"
+                  value={requirementType}
+                  onChange={(e) => setRequirementType(e.target.value)}
+                  style={{ width: '100%', padding: '4px 6px', borderRadius: '4px', border: '1px solid #cbd5e1', fontSize: '0.8rem' }}
+                />
+              </div>
+            </div>
+
+            <div style={{ marginTop: '0.65rem', paddingTop: '0.65rem', borderTop: '1px solid #e2e8f0' }}>
+              <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#64748b', marginBottom: '2px' }}>Requirement Summary / Notes</label>
+              <textarea
+                rows={2}
+                placeholder="Enter requirement details or notes..."
+                value={summaryText}
+                onChange={(e) => setSummaryText(e.target.value)}
+                style={{ width: '100%', padding: '6px', borderRadius: '4px', border: '1px solid #cbd5e1', fontSize: '0.8rem', color: '#334155' }}
+              />
+            </div>
+          </div>
+
+          {/* 2. UPLOADED REFERENCE IMAGES FROM ENQUIRY REGISTRATION */}
+          {matchedEnquiry?.reference_images && matchedEnquiry.reference_images.length > 0 && (
+            <div style={{ marginBottom: '1.25rem', background: '#ffffff', borderRadius: '8px', padding: '0.85rem', border: '1px solid #cbd5e1' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#2563eb', marginBottom: '0.55rem' }}>
+                2. Uploaded Buyer Reference Images ({matchedEnquiry.reference_images.length})
+              </div>
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                {matchedEnquiry.reference_images.map((imgSrc, idx) => (
+                  <div key={idx} style={{ position: 'relative', width: '110px', height: '110px', borderRadius: '8px', overflow: 'hidden', border: '1.5px solid #cbd5e1', boxShadow: '0 2px 6px rgba(0,0,0,0.06)' }}>
+                    <img src={imgSrc} alt={`Reference ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 3. SELECTED FABRIC SAMPLES GALLERY */}
           <div style={{ marginBottom: '1.25rem', background: '#f8fafc', borderRadius: '8px', padding: '0.85rem', border: '1px solid #e2e8f0' }}>
             <div style={{ fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#1e293b', marginBottom: '0.55rem' }}>
-              Selected Fabric Samples in this Order ({samples.length})
+              3. Selected Fabric Samples in this Order ({samples.length})
             </div>
             <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               {samples.map((s) => (
@@ -347,7 +495,7 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
                       #{s.sample_no} — {s.article || 'Standard'}
                     </div>
                     <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                      {s.product} | {s.gsm} GSM
+                      {s.product} | {s.blend || ''} | {s.gsm} GSM
                     </div>
                   </div>
                 </div>
@@ -385,6 +533,7 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
                 <td colSpan="3" style={{ border: '1px solid #0f172a', padding: '4px 8px' }}>
                   <input
                     type="text"
+                    placeholder="Enter End Buyer..."
                     value={endBuyer}
                     onChange={(e) => setEndBuyer(e.target.value)}
                     style={{ width: '100%', border: 'none', outline: 'none', fontWeight: 800, fontSize: '0.88rem', color: '#dc2626' }}
@@ -397,6 +546,7 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
                 <td colSpan="3" style={{ border: '1px solid #0f172a', padding: '4px 8px' }}>
                   <input
                     type="text"
+                    placeholder="Enter Quality details..."
                     value={quality}
                     onChange={(e) => setQuality(e.target.value)}
                     style={{ width: '100%', border: 'none', outline: 'none', fontWeight: 700, fontSize: '0.85rem' }}
@@ -409,6 +559,7 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
                 <td style={{ border: '1px solid #0f172a', padding: '4px 8px' }}>
                   <input
                     type="text"
+                    placeholder="Enter Finish Type..."
                     value={finishType}
                     onChange={(e) => setFinishType(e.target.value)}
                     style={{ width: '100%', border: 'none', outline: 'none', fontWeight: 600, fontSize: '0.83rem' }}
@@ -418,6 +569,7 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
                 <td style={{ border: '1px solid #0f172a', padding: '4px 8px' }}>
                   <input
                     type="text"
+                    placeholder="Enter Fabric Weight..."
                     value={fabricWeight}
                     onChange={(e) => setFabricWeight(e.target.value)}
                     style={{ width: '100%', border: 'none', outline: 'none', fontWeight: 700, fontSize: '0.83rem' }}
@@ -430,6 +582,7 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
                 <td colSpan="3" style={{ border: '1px solid #0f172a', padding: '4px 8px' }}>
                   <input
                     type="text"
+                    placeholder="Enter Print Style..."
                     value={printStyle}
                     onChange={(e) => setPrintStyle(e.target.value)}
                     style={{ width: '100%', border: 'none', outline: 'none', fontWeight: 600, fontSize: '0.83rem' }}
@@ -459,6 +612,7 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
                   <td style={{ border: '1px solid #0f172a', padding: '3px 6px' }}>
                     <input
                       type="text"
+                      placeholder="Add requirement..."
                       value={param.custReq}
                       onChange={(e) => handleParamChange(idx, 'custReq', e.target.value)}
                       style={{ width: '100%', border: 'none', outline: 'none', fontSize: '0.78rem', fontWeight: 600, color: '#1e293b' }}
@@ -467,6 +621,7 @@ export const FDSReportModal = ({ group, samples = [], onClose, onFinalizeSuccess
                   <td style={{ border: '1px solid #0f172a', padding: '3px 6px' }}>
                     <input
                       type="text"
+                      placeholder="Add commitment..."
                       value={param.nslCommit}
                       onChange={(e) => handleParamChange(idx, 'nslCommit', e.target.value)}
                       style={{ width: '100%', border: 'none', outline: 'none', fontSize: '0.78rem', fontWeight: 700, color: '#059669' }}

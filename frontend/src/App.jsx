@@ -131,6 +131,7 @@ const MainApp = () => {
               wishlistData={wishlistData}
               refreshWishlist={fetchWishlist}
               onFinalizeOrder={handleFinalizeOrder}
+              createdEnquiries={createdEnquiries}
             />
           )}
 

@@ -4,7 +4,7 @@ import { SampleCard } from '../components/SampleCard';
 import { FDSReportModal } from '../components/FDSReportModal';
 import { getApiUrl } from '../config';
 
-export const WishlistPage = ({ onOpenModal, wishlistData, refreshWishlist, onFinalizeOrder }) => {
+export const WishlistPage = ({ onOpenModal, wishlistData, refreshWishlist, onFinalizeOrder, createdEnquiries = [] }) => {
   const [activeGroupId, setActiveGroupId] = useState(null);
   const [newGroupModal, setNewGroupModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
@@ -242,6 +242,7 @@ export const WishlistPage = ({ onOpenModal, wishlistData, refreshWishlist, onFin
         <FDSReportModal
           group={activeGroup}
           samples={activeSamples}
+          createdEnquiries={createdEnquiries}
           onClose={() => setFdsModalOpen(false)}
           onFinalizeSuccess={(newEnquiry) => {
             if (onFinalizeOrder) {
